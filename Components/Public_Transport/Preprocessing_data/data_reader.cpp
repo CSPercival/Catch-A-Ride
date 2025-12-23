@@ -1,70 +1,90 @@
+#include<fstream>
+#include<iostream>
+#include<vector>
+#include<assert.h>
+
 #include "data_reader.hpp"
+#include "functions.hpp"
 
-void split_string(string &line, char splitter, vector<string> &ans){
-    ans.clear();
-    int last_splitter = -1;
-    line.push_back(',');
-    for(int i = 0; i < (int)line.size(); i++){
-        if(line[i] == splitter){
-            ans.push_back(line.substr(last_splitter + 1, i - last_splitter - 1));
-            last_splitter = i;
-        }
-    }
-    line.pop_back();
-}
+using namespace std;
 
-Data::Data(string stops_path, string trips_path, string stop_times_path){
+void read_stops(string &path, Data *pt_data){
     string line;
     vector<string> parts;
-    stops.resize(1);    // stops are 1-indexed
-    stops[0].id = 0;
-    trips.resize(1);    // trips are 1-indexed
-    trips[0].id = 0;
-
-    ifstream stops_file(stops_path);
-    getline(stops_file, line);
-    while(getline(stops_file, line)){
+    ifstream file(path);
+    getline(file, line);
+    int old_id;
+    Stop_lite new_id;
+    while(getline(file, line)){
         split_string(line, ',', parts);
-        int old_id = stoi(parts[0]);
-        assert(!trans_stop.count(old_id));
-        trans_stop[old_id] = (int)trans_stop.size() + 1;
-        // stops[trans_stop.size()] = Stop(trans_stop.size(), parts[2], parts[3], parts[4]);
-        stops.push_back(Stop(trans_stop.size(), parts[2], parts[3], parts[4]));
-        // stops.emplace(stoi(parts[0]), Stop(stoi(parts[0]), parts[2], stod(parts[3]), stod(parts[4])));
-    }
+        
+        old_id = stoi(parts[0]);
+        new_id = (Stop_lite)pt_data->stops.size();
+        assert(!pt_data->o2n_stop.count(old_id));
+        pt_data->o2n_stop[old_id] = new_id;
+        pt_data->n2o_stop[new_id] = old_id;
 
-    ifstream trips_file(trips_path);
+        pt_data->stops.push_back(Stop(new_id, parts[2], parts[3], parts[4]));
+    }
+}
+
+void read_trips(string &path, Data *pt_data){
+    string line;
+    vector<string> parts;
+    ifstream trips_file(path);
     getline(trips_file, line);
+    Trip_lite new_id;
+    string old_id;
     while(getline(trips_file, line)){
         split_string(line, ',', parts);
-        trans_trip[parts[2]] = (int)trans_trip.size() + 1;
-        // trips[trans_trip.size()] = Trip(trans_trip.size(), parts[0]);
-        trips.push_back(Trip(trans_trip.size(), parts[0]));
-        // trips.emplace(parts[2], Trip(parts[2], parts[0]));
-    }
+        
+        old_id = parts[2];
+        new_id = (Trip_lite)pt_data->trips.size();
+        assert(!pt_data->o2n_trip.count(old_id));
+        pt_data->o2n_trip[old_id] = new_id;
+        pt_data->n2o_trip[new_id] = old_id;
 
-    ifstream stop_times_file(stop_times_path);
+        pt_data->trips.push_back(Trip(new_id, parts[0]));
+    }
+}
+
+void read_stop_times(string &path, Data *pt_data){
+    string line;
+    vector<string> parts;
+    ifstream stop_times_file(path);
     getline(stop_times_file, line);
     while(getline(stop_times_file, line)){
         split_string(line, ',', parts);
-        // Time arr(parts[1]);
-        // Time dep(parts[2]);
-        if(trans_stop[stoi(parts[3])] >= (int)stops.size()){
-            cout << parts[3] << " " << trans_stop[stoi(parts[3])] << " " << stops.size() << "\n";
-        }
-        assert(trans_stop[stoi(parts[3])] < (int)stops.size());
-        assert(trans_trip[parts[0]] < (int)trips.size());
-        trips[trans_trip[parts[0]]].route.push_back(Vertex(stops[trans_stop[stoi(parts[3])]], Time(parts[1])));
+        assert(pt_data->o2n_stop.count(stoi(parts[3])));
+        assert(pt_data->o2n_trip.count(parts[0]));
+        assert(pt_data->o2n_stop[stoi(parts[3])] < (int)pt_data->stops.size());
+        assert(pt_data->o2n_trip[parts[0]] < (int)pt_data->trips.size());
+        pt_data->trips[pt_data->o2n_trip[parts[0]]].route.push_back(
+            Vertex_lite(pt_data->o2n_stop[stoi(parts[3])], Time_lite(parts[1]))
+        );
     }
 }
-void Data::run_checker(){
-    for(auto &stop : stops){
+
+void read_data(string stops_path, string trips_path, string stop_times_path, Data *pt_data){
+    pt_data->stops.resize(1);    // stops are 1-indexed
+    pt_data->stops[0].id = 0;
+    pt_data->trips.resize(1);    // trips are 1-indexed
+    pt_data->trips[0].id = 0;
+
+    read_stops(stops_path, pt_data);
+    read_trips(trips_path, pt_data);
+    read_stop_times(stop_times_path, pt_data);
+}
+
+void validate_data(Data *pt_data){
+    for(auto &stop : pt_data->stops){
         assert(stop.id < stops_lim);
         assert(stop.id != -1);
     }
     int day_line_ctr = 0;
-    for(auto &trip : trips){
+    for(auto &trip : pt_data->trips){
         assert(trip.id != -1);
+        // assert((int)trip.route.size() > 0);
         day_line_ctr = 0;
         for(int i = 1; i < (int)trip.route.size(); i++){
             if(trip.route[i].time < trip.route[i - 1].time) day_line_ctr++;

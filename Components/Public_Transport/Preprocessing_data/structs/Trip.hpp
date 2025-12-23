@@ -1,0 +1,26 @@
+#ifndef TRIP_STRUCT
+#define TRIP_STRUCT
+
+#include<iostream>
+#include<string>
+
+#include"Lites.hpp"
+
+using namespace std;
+
+struct Trip{
+    int id = -1;
+    string line_name = "NN";
+    vector<Vertex_lite> route;
+    Trip() {}
+    Trip(int in_id, string &in_name) : id(in_id), line_name(in_name) {}
+};
+
+
+// struct Trip_lite{
+//     int id = -1;
+//     Trip_lite() {}
+//     Trip_lite(int in_id) : id(in_id) {}
+// };
+
+#endif
