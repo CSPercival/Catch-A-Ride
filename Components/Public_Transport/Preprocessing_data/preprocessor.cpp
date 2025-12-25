@@ -65,12 +65,15 @@ Time_lite dist2time(double dist){
 // }
 
 void enrich_data(Data *pt_data){
-    pt_data->walk_matrix.resize(stops_lim);
-    for(auto &stop_a : pt_data->stops){
-        pt_data->walk_matrix[stop_a.id].resize(stops_lim);
-        for(auto &stop_b : pt_data->stops){
-            pt_data->walk_matrix[stop_a.id][stop_b.id] = dist2time(walk_distance(stop_a, stop_b));
+    if(!pt_data->walk_matrix_computed){
+        pt_data->walk_matrix.resize(stops_lim);
+        for(auto &stop_a : pt_data->stops){
+            pt_data->walk_matrix[stop_a.id].resize(stops_lim);
+            for(auto &stop_b : pt_data->stops){
+                pt_data->walk_matrix[stop_a.id][stop_b.id] = dist2time(walk_distance(stop_a, stop_b));
+            }
         }
+        pt_data->walk_matrix_computed = true;
     }
 
     for(auto &trip : pt_data->trips){
@@ -134,13 +137,16 @@ void enrich_data(Data *pt_data){
 
 
 
-Data PT_data;
+Data PT_data[4];
+int days_id[] = {6, 8, 3, 4}; // Mon-Thu, Fri, Sat, Sun
 
 int main(){
     // Data data("./../Resources/GTFS/stops.txt", "./../Resources/GTFS/trips.txt", "./../Resources/GTFS/stop_times.txt");
-    read_data("./../Resources/GTFS/stops.txt", "./../Resources/GTFS/trips.txt", "./../Resources/GTFS/stop_times.txt", &PT_data);
-    validate_data(&PT_data);
-    enrich_data(&PT_data);
+    for(int i = 0; i < 4; i++){
+        read_data("./../Resources/GTFS/stops.txt", "./../Resources/GTFS/trips.txt", "./../Resources/GTFS/stop_times.txt", &PT_data[i], days_id[i]);
+        validate_data(&PT_data[i]);
+        enrich_data(&PT_data[i]);
+    }
     // cout << "DONE?\n";
     // data.run_checker();
     // compute_graph(&graph, &data);

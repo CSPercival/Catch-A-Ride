@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void read_data(string stops_path, string trips_path, string stop_times_path, Data *data);
+void read_data(string stops_path, string trips_path, string stop_times_path, Data *data, int day_id);
 void validate_data(Data *data);
 
 #endif
