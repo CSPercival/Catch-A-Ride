@@ -26,6 +26,7 @@ struct Time{
         em = (em + minutes_in_day) % minutes_in_day;
         em2hm(em, &h, &m);
     }
+    Time(Time_lite tl) : Time(tl.em){}
     Time(string &time){
         h = stoi(time.substr(0, 2)) % 24;
         m = stoi(time.substr(3, 2));
@@ -36,6 +37,10 @@ struct Time{
     Time operator-(const Time &a) const{ return Time(em - a.em); }
     bool operator<(const Time &a) const{ return em < a.em; }
     bool operator==(const Time &a) const{ return em == a.em; }
+
+    void print(){
+        cout << h << ":" << m;
+    }
 };
 
 

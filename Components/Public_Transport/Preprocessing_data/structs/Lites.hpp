@@ -20,7 +20,7 @@ struct Time_lite{
     Time_lite(int in_em){
         em = (short)((in_em + minutes_in_day) % minutes_in_day);
     }
-    Time_lite(string &time_str){
+    Time_lite(string time_str){
         int h = stoi(time_str.substr(0, 2));
         int m = stoi(time_str.substr(3, 2));
         em = (short)((h * 60 + m + minutes_in_day) % minutes_in_day);
@@ -28,9 +28,11 @@ struct Time_lite{
     }
 
     Time_lite operator+(const Time_lite &a) const{ return Time_lite(a.em + em); }
+    Time_lite operator+(const short &a) const{ return Time_lite(a + em); }
     Time_lite operator-(const Time_lite &a) const{ return Time_lite(em - a.em); }
     bool operator<(const Time_lite &a) const{ return em < a.em; }
     bool operator==(const Time_lite &a) const{ return em == a.em; }
+    bool operator<=(const Time_lite &a) const{ return em <= a.em; }
 };
 
 struct Vertex_lite{
@@ -46,6 +48,21 @@ struct Vertex_lite{
     // bool operator==(const Vertex &a) const{
     //     return time == a.time && stop.id == a.stop.id;
     // }
+};
+
+struct Edge_lite{
+    Vertex_lite u, v;
+    Trip_lite trip_id;
+    Edge_lite() {}
+    void print(){
+        cout << "(" << u.stop << ' ' << u.time.em << " -> " << v.stop << " " << v.time.em << " via " << trip_id << ")";
+    }
+    Edge_lite(Vertex_lite in_u, Vertex_lite in_v, Trip_lite in_trip_id) : u(in_u), v(in_v), trip_id(in_trip_id) {}
+    bool operator<(const Edge_lite &a) const{
+        if(u.time.em != a.u.time.em) return u.time.em < a.u.time.em;
+        if(v.time.em != a.v.time.em) return v.time.em < a.v.time.em;
+        return trip_id < a.trip_id;
+    }  
 };
 
 #endif

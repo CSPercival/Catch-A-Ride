@@ -31,13 +31,70 @@ Time_lite dist2time(double dist){
     return Time_lite((int)round(pow(dist, 1.1) * 60.0 / walking_speed_kmph));
 }
 
-// void generate_destination_list(Vertex_lite &start){
-//     vector<Time> vis(stops_lim);
-//     int ctr = 0;
-//     set<Vertex> potencials;
-//     queue<Vertex> wait_stops;
-//     pq.push(start);
-// }
+struct Comparator{
+    bool operator()(Vertex_lite &a, Vertex_lite &b){
+        return b < a;
+    }
+};
+
+void generate_destination_list(Vertex_lite start, Data *pt_data){
+    vector<Time_lite> vis(stops_lim, minutes_in_day - 1 - transfer_time);
+    priority_queue<Vertex_lite, vector<Vertex_lite>, Comparator> pq;
+    Vertex_lite v(start.stop, transfer_time);
+    Time_lite nt;
+    pq.push(v);
+    vis[v.stop] = 0;
+    while(!pq.empty()){
+        v = pq.top();
+        pq.pop();
+        if(vis[v.stop] + transfer_time < v.time) continue;
+        // cout << "PQ ";
+        // pt_data->stops[v.stop].print_name();
+        // cout << " " << v.time.em << "\n";
+        // pt_data->stops[v.stop].print_all();
+        // cout << "\n";
+        for(auto reachable_stop_id : pt_data->stops[v.stop].reachable){
+            // Time_lite debt(start.time + v.time);
+            Edge_lite edge = pt_data->stops[v.stop].get_next(Time_lite(start.time + v.time), reachable_stop_id);
+            if(edge.u.time < start.time + v.time){
+                if(start.time <= edge.v.time) continue;
+                edge.v.time.em += minutes_in_day;
+            }
+            // nt = pt_data->stops[v.stop].get_next(Time_lite(start.time + v.time), reachable_stop_id).v.time;
+            nt = edge.v.time - start.time;
+            if(nt < vis[reachable_stop_id]){
+                vis[reachable_stop_id] = nt;
+                // cout << "    Adding ";
+                // pt_data->stops[reachable_stop_id].print_name();
+                // cout << " with time " << nt.em + transfer_time << "\n";
+                // cout << "       " << debt.em << " ";
+                // e.print();
+                // cout << "\n";
+                pq.push(Vertex_lite(reachable_stop_id, nt + transfer_time));
+            }
+        }
+        for(Stop_lite walk_stop_id = 1; walk_stop_id < stops_lim; walk_stop_id++){
+            if(v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time < vis[walk_stop_id]){
+                vis[walk_stop_id] = v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time;
+                // cout << "    Adding walking ";
+                // pt_data->stops[walk_stop_id].print_name();
+                // cout << " with time " << vis[walk_stop_id].em << "\n";
+                pq.push(Vertex_lite(walk_stop_id, v.time + pt_data->walk_matrix[v.stop][walk_stop_id]));
+            }
+        }
+    }
+
+    cout << "Destination list for: \n";
+    pt_data->stops[start.stop].print_all();
+    for(int i = 1; i < stops_lim; i++){
+        pt_data->stops[i].print_name();
+        cout << " reached in -> ";
+        Time t(start.time + vis[i]);
+        t.print();
+        cout << "     " << vis[i].em << " " << start.time.em;
+        cout << "\n";
+    }
+}
 
 // void compute_graph(Graph *graph, Data *data){
 //     for(auto &stop_a : data->stops){
@@ -83,7 +140,8 @@ void enrich_data(Data *pt_data){
                 Vertex_lite a = trip.route[i];
                 Vertex_lite b = trip.route[j];
                 pt_data->stops[a.stop].reachable.push_back(b.stop);
-                pt_data->stops[a.stop].connections[b.stop].push_back({b.time, trip.id});
+                // pt_data->stops[a.stop].connections[b.stop].push_back({b.time, trip.id});
+                pt_data->stops[a.stop].connections[b.stop].push_back(Edge_lite(a, b, trip.id));
             }
         }
     }
@@ -140,12 +198,19 @@ void enrich_data(Data *pt_data){
 Data PT_data[4];
 int days_id[] = {6, 8, 3, 4}; // Mon-Thu, Fri, Sat, Sun
 
+int zlotnicka = 1671;
+
 int main(){
     // Data data("./../Resources/GTFS/stops.txt", "./../Resources/GTFS/trips.txt", "./../Resources/GTFS/stop_times.txt");
     for(int i = 0; i < 4; i++){
         read_data("./../Resources/GTFS/stops.txt", "./../Resources/GTFS/trips.txt", "./../Resources/GTFS/stop_times.txt", &PT_data[i], days_id[i]);
         validate_data(&PT_data[i]);
         enrich_data(&PT_data[i]);
+    }
+
+    generate_destination_list(Vertex_lite(PT_data[0].o2n_stop[zlotnicka], Time_lite("08:00:00")), &PT_data[0]);
+    for(int i = 0; i < stops_lim; i++){
+        cout << i << " " << PT_data[0].walk_matrix[PT_data[0].o2n_stop[zlotnicka]][i].em << "\n";
     }
     // cout << "DONE?\n";
     // data.run_checker();

@@ -14,27 +14,14 @@ struct Stop{
     string name = "NN";
     string lat = "0.0", lon = "0.0";
     vector<Stop_lite> reachable;
-    vector<vector<pair<Time_lite, Trip_lite>>> connections;
+    vector<vector<Edge_lite>> connections;
     Stop() {}
     Stop(int in_id, string &in_name, string &in_lat, string &in_lon) : id(in_id), name(in_name), lat(in_lat), lon(in_lon) {
         connections.resize(stops_lim);
     }
-    void print(){
-        cout << id << " " << name << " " << lat << " " << lon << "\n";
-        cout << "reachable from " << name << ": ";
-        for(auto i : reachable){
-            cout << i << " ";
-        }
-        cout << "\n";
-        cout << "Connections from " << name << ":\n";
-        for(int i = 0; i < (int)connections.size(); i++){
-            cout << i << ": ";
-            for(auto j : connections[i]){
-                cout << "(" << j.first.em << ", " << j.second << ") ";
-            }
-            cout << "\n";
-        }
-    }
+    Edge_lite get_next(Time_lite u_time, int v_id);
+    void print_all();
+    void print_name();
 };
 
 
