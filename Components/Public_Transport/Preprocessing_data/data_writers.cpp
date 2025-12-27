@@ -38,10 +38,6 @@ void write_to_file(ofstream &file, long long data, int declared_size){
     }
     assert(false);
 }
-// void write_to_file(ofstream file, long double data, int declared_size, int send_size){
-
-// }
-
 
 // DESTINATION LISTS --------------------------------------------------------------------------------------------------------------
 
@@ -50,8 +46,6 @@ Destination_Lists_Writer::Destination_Lists_Writer(string directory_path, string
     file.open(directory_path + "/" + file_name, ios::binary);
     assert(file.is_open());
     write_to_file(file, stops_lim, 2);
-    // int16_t number_of_stops = (int16_t)stops_lim;
-    // file.write(reinterpret_cast<char*>(&number_of_stops), sizeof(number_of_stops));
 }
 void Destination_Lists_Writer::write_content(vector<Time_lite> &reach_times, vector<pair<Stop_lite, Trip_lite>> &predecessors){
     assert(reach_times.size() == predecessors.size());
@@ -59,12 +53,6 @@ void Destination_Lists_Writer::write_content(vector<Time_lite> &reach_times, vec
         write_to_file(file, reach_times[i].em, 2);
         write_to_file(file, predecessors[i].first, 2);
         write_to_file(file, predecessors[i].second, 2);
-        // assert(sizeof(reach_times[i].em) == 2);
-        // assert(sizeof(predecessors[i].first) == 2);
-        // assert(sizeof(predecessors[i].second) == 2);
-        // file.write(reinterpret_cast<char*>(&reach_times[i].em), sizeof(reach_times[i].em));
-        // file.write(reinterpret_cast<char*>(&predecessors[i].first), sizeof(predecessors[i].first));
-        // file.write(reinterpret_cast<char*>(&predecessors[i].second), sizeof(predecessors[i].second));
     }
 }
 void Destination_Lists_Writer::destructor(){
@@ -84,9 +72,6 @@ Stops_Data_Writer::Stops_Data_Writer(string directory_path, string file_name){
     write_to_file(file, longtitude_max, 1);
 }
 void Stops_Data_Writer::write_content(Stop &stop){
-    // int16_t data_to_send = (uint16_t)stop.id;
-    // assert((int)data_to_send == stop.id);
-    // file.write(reinterpret_cast<char*>(&data_to_send), data_size);
     write_to_file(file, stop.id, 2);
     write_to_file(file, stop.name, stop_name_max);
     write_to_file(file, stop.lat, latitude_max);

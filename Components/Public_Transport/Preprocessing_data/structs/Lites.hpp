@@ -24,7 +24,6 @@ struct Time_lite{
         int h = stoi(time_str.substr(0, 2));
         int m = stoi(time_str.substr(3, 2));
         em = (int16_t)((h * 60 + m + minutes_in_day) % minutes_in_day);
-        // Time_lite(h * 60 + m);
     }
 
     Time_lite operator+(const Time_lite &a) const{ return Time_lite(a.em + em); }
@@ -42,12 +41,7 @@ struct Vertex_lite{
     Vertex_lite(Stop_lite in_s, Time_lite in_t) : stop(in_s), time(in_t) {}
     bool operator<(const Vertex_lite &a) const{
         return time < a.time || (time == a.time && stop < a.stop);
-        // if(time == a.time) return stop.id < a.stop.id;
-        // return time < a.time;
     }
-    // bool operator==(const Vertex &a) const{
-    //     return time == a.time && stop.id == a.stop.id;
-    // }
 };
 
 struct Edge_lite{

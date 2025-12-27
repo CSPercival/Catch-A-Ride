@@ -16,11 +16,4 @@ struct Trip{
     Trip(Trip_lite in_id, string &in_name) : id(in_id), line_name(in_name) {}
 };
 
-
-// struct Trip_lite{
-//     int id = -1;
-//     Trip_lite() {}
-//     Trip_lite(int in_id) : id(in_id) {}
-// };
-
 #endif

@@ -35,15 +35,5 @@ struct Trips_Data_Writer{
     void destructor();
 };
 
-// struct Walk_Matrix_Writer{
-//     ofstream file;
-//     Data *pt_data;
-
-//     Walk_Matrix_Writer(string file_path);
-//     void write_content(vector<Time_lite> reach_times, vector<pair<Stop_lite, Trip_lite>> predecessors);
-//     void destructor();
-// };
-
-
 
 #endif

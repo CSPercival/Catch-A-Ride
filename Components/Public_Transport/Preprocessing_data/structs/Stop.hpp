@@ -22,13 +22,4 @@ struct Stop{
     void print_name();
 };
 
-
-// struct Stop_lite{
-//     int id = -1;
-//     Stop_lite(){}
-//     bool operator<(const Stop_lite &a) const{
-//         return id < a.id;
-//     }
-// };
-
 #endif

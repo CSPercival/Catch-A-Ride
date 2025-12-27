@@ -53,6 +53,7 @@ void read_trips(string &path, Data *pt_data, int day_id){
         pt_data->n2o_trip[new_id] = old_id;
 
         pt_data->trips.push_back(Trip(new_id, parts[0]));
+        line_name_max = max(line_name_max, (int)parts[0].size() + 1);
     }
     trips_lim = (int)pt_data->trips.size();
 }
@@ -95,10 +96,6 @@ void validate_data(Data *pt_data){
     for(auto &trip : pt_data->trips){
         assert(trip.id != -1);
         assert((int)trip.route.size() > 0 || trip.id == 0);
-        // if(trip.route.size() == 0){
-        //     trip.print();
-        //     assert(false);
-        // }
         day_line_ctr = 0;
         for(int i = 1; i < (int)trip.route.size(); i++){
             if(trip.route[i].time < trip.route[i - 1].time) day_line_ctr++;
