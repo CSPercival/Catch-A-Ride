@@ -127,6 +127,8 @@ void generate_destination_list(Vertex_lite start, Data *pt_data, vector<Time_lit
 //     cout << graph->adj_list.size() << " " << ctr << "\n";
 // }
 
+// int tmp_ctr = 0;
+
 void enrich_data(Data *pt_data){
     if(!pt_data->walk_matrix_computed){
         pt_data->walk_matrix.resize(stops_lim);
@@ -158,6 +160,7 @@ void enrich_data(Data *pt_data){
     
         int ptr = 0;
         for(auto &v : stop.connections){
+            auto tmpv = v;
             // cerr << pt_data->stops[ptr].name << "\n";
             // if(v.size() == 0 && find(stop.reachable.begin(), stop.reachable.end(), ptr) != stop.reachable.end()){
             //     assert(false);
@@ -166,9 +169,32 @@ void enrich_data(Data *pt_data){
             //     assert(false);
             // }
             assert((v.size() != 0) ^ (find(stop.reachable.begin(), stop.reachable.end(), ptr) == stop.reachable.end()));
-            sort(v.begin(), v.end());
             ptr++;
-            /*TODO - remove connections that departure earlier but arrive later*/
+            if(v.size() == 0) continue;
+            sort(tmpv.begin(), tmpv.end());
+            v.clear();
+            for(auto e : tmpv){
+                // e.print();
+                // cout << "\n";
+                while(!v.empty() && e.v.time < v.back().v.time && (v.back().v.time < v.back().u.time) == (e.v.time < e.u.time)){
+                    // cout << "   ";
+                    // v.back().print();
+                    // cout << "\n";
+                    // tmp_ctr++;
+                    v.pop_back();
+                }
+                v.push_back(e);
+            }
+            auto e = v[0];
+            // e.print();
+            // cout << "  LAST\n";
+            while(!v.empty() && v.back().v.time < v.back().u.time && e.v.time < v.back().v.time){ 
+                // cout << "   ";
+                // v.back().print();
+                // cout << "\n";
+                // tmp_ctr++;
+                v.pop_back();
+            }
         }
     }
 
@@ -248,7 +274,7 @@ int main(){
     }
 
     cerr << "ALL STAGES FINISHED\n";
-
+    // cerr << tmp_ctr << "\n";
 
     // generate_destination_list(Vertex_lite(PT_data[0].o2n_stop[zlotnicka], Time_lite("08:00:00")), &PT_data[0]);
     // for(int i = 0; i < stops_lim; i++){
