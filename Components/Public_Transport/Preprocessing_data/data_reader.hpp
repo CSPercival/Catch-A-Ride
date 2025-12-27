@@ -3,7 +3,7 @@
 
 #include<string>
 
-#include "Data.hpp"
+#include "structs/Data.hpp"
 
 using namespace std;
 

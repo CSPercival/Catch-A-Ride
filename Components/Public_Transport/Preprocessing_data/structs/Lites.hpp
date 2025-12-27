@@ -7,28 +7,28 @@
 
 using namespace std;
 
-using Stop_lite = short;
-using Trip_lite = int;
+using Stop_lite = int16_t;
+using Trip_lite = int16_t;
 
 struct Time_lite{
-    short em = 0;     // number of minutes elapsed since 00:00
+    int16_t em = 0;     // number of minutes elapsed since 00:00
 
     Time_lite() {}
     Time_lite(int in_h, int in_m){
         Time_lite(in_h * 60 + in_m);
     }
     Time_lite(int in_em){
-        em = (short)((in_em + minutes_in_day) % minutes_in_day);
+        em = (int16_t)((in_em + minutes_in_day) % minutes_in_day);
     }
     Time_lite(string time_str){
         int h = stoi(time_str.substr(0, 2));
         int m = stoi(time_str.substr(3, 2));
-        em = (short)((h * 60 + m + minutes_in_day) % minutes_in_day);
+        em = (int16_t)((h * 60 + m + minutes_in_day) % minutes_in_day);
         // Time_lite(h * 60 + m);
     }
 
     Time_lite operator+(const Time_lite &a) const{ return Time_lite(a.em + em); }
-    Time_lite operator+(const short &a) const{ return Time_lite(a + em); }
+    Time_lite operator+(const int16_t &a) const{ return Time_lite(a + em); }
     Time_lite operator-(const Time_lite &a) const{ return Time_lite(em - a.em); }
     bool operator<(const Time_lite &a) const{ return em < a.em; }
     bool operator==(const Time_lite &a) const{ return em == a.em; }

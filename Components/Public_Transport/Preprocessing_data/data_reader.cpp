@@ -23,8 +23,14 @@ void read_stops(string &path, Data *pt_data){
         assert(!pt_data->o2n_stop.count(old_id));
         pt_data->o2n_stop[old_id] = new_id;
         pt_data->n2o_stop[new_id] = old_id;
-
+        stop_name_max = max(stop_name_max, (int)parts[2].size() + 1);
+        latitude_max = max(latitude_max, (int)parts[3].size() + 1);
+        longtitude_max = max(longtitude_max, (int)parts[4].size() + 1);
         pt_data->stops.push_back(Stop(new_id, parts[2], parts[3], parts[4]));
+    }
+    stops_lim = pt_data->stops.size();
+    for(int i = 0; i < stops_lim; i++){
+        pt_data->stops[i].connections.resize(stops_lim);
     }
 }
 
@@ -48,6 +54,7 @@ void read_trips(string &path, Data *pt_data, int day_id){
 
         pt_data->trips.push_back(Trip(new_id, parts[0]));
     }
+    trips_lim = pt_data->trips.size();
 }
 
 void read_stop_times(string &path, Data *pt_data, int day_id){
