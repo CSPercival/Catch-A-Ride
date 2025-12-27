@@ -55,7 +55,7 @@ Destination_Lists_Writer::Destination_Lists_Writer(string directory_path, string
 }
 void Destination_Lists_Writer::write_content(vector<Time_lite> &reach_times, vector<pair<Stop_lite, Trip_lite>> &predecessors){
     assert(reach_times.size() == predecessors.size());
-    for(int i = 1; i < reach_times.size(); i++){
+    for(int i = 1; i < (int)reach_times.size(); i++){
         write_to_file(file, reach_times[i].em, 2);
         write_to_file(file, predecessors[i].first, 2);
         write_to_file(file, predecessors[i].second, 2);

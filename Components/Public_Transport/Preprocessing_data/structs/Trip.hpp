@@ -9,11 +9,11 @@
 using namespace std;
 
 struct Trip{
-    int id = -1;
+    Trip_lite id = -1;
     string line_name = "NN";
     vector<Vertex_lite> route;
     Trip() {}
-    Trip(int in_id, string &in_name) : id(in_id), line_name(in_name) {}
+    Trip(Trip_lite in_id, string &in_name) : id(in_id), line_name(in_name) {}
 };
 
 

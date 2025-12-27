@@ -23,7 +23,7 @@ void Stop::print_name(){
     cout << "( " << id << " " << name << " " << lat << " " << lon << " )";
 }
 
-Edge_lite Stop::get_next(Time_lite u_time, int v_id){
+Edge_lite Stop::get_next(Time_lite u_time, Stop_lite v_id){
     assert(!connections[v_id].empty());
     // Edge_lite debe(Vertex_lite(id, u_time), Vertex_lite(0, 0), 0);
     // debe.print();

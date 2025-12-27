@@ -76,15 +76,16 @@ void generate_destination_list(Vertex_lite start, Data *pt_data, vector<Time_lit
                 pq.push(Vertex_lite(reachable_stop_id, nt + transfer_time));
             }
         }
-        /*TODO - lazy way of adding walking destinations to the queue*/
-        for(Stop_lite walk_stop_id = 1; walk_stop_id < stops_lim; walk_stop_id++){
-            if(v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time < visited[walk_stop_id]){
-                visited[walk_stop_id] = v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time;
-                predecessor[walk_stop_id] = {v.stop, 0};
-                // cout << "    Adding walking ";
-                // pt_data->stops[walk_stop_id].print_name();
-                // cout << " with time " << visited[walk_stop_id].em << "\n";
-                pq.push(Vertex_lite(walk_stop_id, v.time + pt_data->walk_matrix[v.stop][walk_stop_id]));
+        if(predecessor[v.stop].second != 0){
+            for(Stop_lite walk_stop_id = 1; walk_stop_id < stops_lim; walk_stop_id++){
+                if(v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time < visited[walk_stop_id]){
+                    visited[walk_stop_id] = v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time;
+                    predecessor[walk_stop_id] = {v.stop, 0};
+                    // cout << "    Adding walking ";
+                    // pt_data->stops[walk_stop_id].print_name();
+                    // cout << " with time " << visited[walk_stop_id].em << "\n";
+                    pq.push(Vertex_lite(walk_stop_id, v.time + pt_data->walk_matrix[v.stop][walk_stop_id]));
+                }
             }
         }
     }
@@ -237,7 +238,7 @@ int main(){
         Destination_Lists_Writer DLW("./../Resources/Preprocessed_Data/" + days_names[i], "Dest_Data.bin");
         vector<Time_lite> reach_times;
         vector<pair<Stop_lite, Trip_lite>> predecessors;
-        for(int stop_it = 1; stop_it < 2; stop_it++){
+        for(Stop_lite stop_it = 1; stop_it < 2; stop_it++){
             for(int time_it = 0; time_it < minutes_in_day; time_it++){
                 generate_destination_list(Vertex_lite(stop_it, time_it), &PT_data[i], reach_times, predecessors);
                 DLW.write_content(reach_times, predecessors);
