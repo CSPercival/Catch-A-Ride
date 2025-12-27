@@ -45,6 +45,9 @@ struct Vertex_lite{
         // if(time == a.time) return stop.id < a.stop.id;
         // return time < a.time;
     }
+    bool operator==(const Vertex_lite &a) const{
+        return time == a.time && stop == a.stop;
+    }
     // bool operator==(const Vertex &a) const{
     //     return time == a.time && stop.id == a.stop.id;
     // }

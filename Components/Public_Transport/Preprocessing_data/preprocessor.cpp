@@ -8,6 +8,7 @@
 #include "structs/Lites.hpp"
 #include "structs/Stop.hpp"
 #include "structs/Time.hpp"
+#include "structs/Queue.hpp"
 
 using namespace std;
 
@@ -40,21 +41,28 @@ struct Comparator{
 
 void generate_destination_list(Vertex_lite start, Data *pt_data, vector<Time_lite> &visited, vector<pair<Stop_lite, Trip_lite>> &predecessor){
     visited.assign(stops_lim, minutes_in_day - 1 - transfer_time);
+    vector<int> dead(stops_lim, 0);
+    int dead_ctr = 1;
     predecessor.assign(stops_lim, make_pair(-1,-1));
-    priority_queue<Vertex_lite, vector<Vertex_lite>, Comparator> pq;
+    // priority_queue<Vertex_lite, vector<Vertex_lite>, Comparator> pq;
+    Lazy_Queue pq(pt_data, &visited, &predecessor);
     Vertex_lite v(start.stop, transfer_time);
     Time_lite nt;
-    pq.push(v);
+    pq.push_standard(v);
     visited[v.stop] = 0;
-    while(!pq.empty()){
-        v = pq.top();
-        pq.pop();
-        if(visited[v.stop] + transfer_time < v.time) continue;
+    dead[v.stop] = 0;
+    while(!pq.empty() && dead_ctr < stops_lim){
+        v = pq.top_pop();
+        if(dead[v.stop]) continue;
+        dead[v.stop] = 1;
+        dead_ctr++;
+        // if(!(visited[v.stop] == minutes_in_day - 1 - transfer_time)) continue;
         // cout << "PQ ";
         // pt_data->stops[v.stop].print_name();
-        // cout << " " << v.time.em << "\n";
+        // cout << " " << v.time.em << endl;
+        
         // pt_data->stops[v.stop].print_all();
-        // cout << "\n";
+        // cout << endl;
         for(auto reachable_stop_id : pt_data->stops[v.stop].reachable){
             // Time_lite debt(start.time + v.time);
             Edge_lite edge = pt_data->stops[v.stop].get_next(Time_lite(start.time + v.time), reachable_stop_id);
@@ -73,22 +81,41 @@ void generate_destination_list(Vertex_lite start, Data *pt_data, vector<Time_lit
                 // cout << "       " << debt.em << " ";
                 // e.print();
                 // cout << "\n";
-                pq.push(Vertex_lite(reachable_stop_id, nt + transfer_time));
+                pq.push_standard(Vertex_lite(reachable_stop_id, nt + transfer_time));
             }
         }
         /*TODO - lazy way of adding walking destinations to the queue*/
-        for(Stop_lite walk_stop_id = 1; walk_stop_id < stops_lim; walk_stop_id++){
-            if(v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time < visited[walk_stop_id]){
-                visited[walk_stop_id] = v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time;
-                predecessor[walk_stop_id] = {v.stop, 0};
-                // cout << "    Adding walking ";
-                // pt_data->stops[walk_stop_id].print_name();
-                // cout << " with time " << visited[walk_stop_id].em << "\n";
-                pq.push(Vertex_lite(walk_stop_id, v.time + pt_data->walk_matrix[v.stop][walk_stop_id]));
-            }
+        if(predecessor[v.stop].second != 0){
+            pq.push_walk(v.stop, 1);
+            // for(Stop_lite walk_stop_id = 1; walk_stop_id < stops_lim; walk_stop_id++){
+            //     if(v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time < visited[walk_stop_id]){
+            //         visited[walk_stop_id] = v.time + pt_data->walk_matrix[v.stop][walk_stop_id] - transfer_time;
+            //         predecessor[walk_stop_id] = {v.stop, 0};
+            //         // cout << "    Adding walking ";
+            //         // pt_data->stops[walk_stop_id].print_name();
+            //         // cout << " with time " << visited[walk_stop_id].em << "\n";
+            //         pq.push(Vertex_lite(walk_stop_id, v.time + pt_data->walk_matrix[v.stop][walk_stop_id]));
+            //     }
+            // }
         }
+        // for(int sorted_walk_stop_id = 1; sorted_walk_stop_id < stops_lim /*&&
+        //     pt_data->walk_matrix_sorted[v.stop][sorted_walk_stop_id].time <= 30*/; sorted_walk_stop_id++){
+        //     Time_lite walk_time = pt_data->walk_matrix_sorted[v.stop][sorted_walk_stop_id].time;
+        //     Stop_lite walk_dest = pt_data->walk_matrix_sorted[v.stop][sorted_walk_stop_id].stop;
+        //     if(v.time + walk_time - transfer_time < visited[walk_dest]){
+        //         visited[walk_dest] = v.time + walk_time - transfer_time;
+        //         predecessor[walk_dest] = {v.stop, 0};
+        //         // cout << "    Adding walking ";
+        //         // pt_data->stops[walk_stop_id].print_name();
+        //         // cout << " with time " << visited[walk_stop_id].em << "\n";
+        //         pq.push(Vertex_lite(walk_dest, v.time + walk_time));
+        //     }
+        // }
     }
-
+    cerr << "DONE" << start.stop << "\n";
+    // for(int i = 1; i < stops_lim; i++){
+    //     max_em = max(max_em, (int)visited[i].em);
+    // }
     // cout << "Destination list for: \n";
     // pt_data->stops[start.stop].print_all();
     // for(int i = 1; i < stops_lim; i++){
@@ -129,11 +156,15 @@ void generate_destination_list(Vertex_lite start, Data *pt_data, vector<Time_lit
 void enrich_data(Data *pt_data){
     if(!pt_data->walk_matrix_computed){
         pt_data->walk_matrix.resize(stops_lim);
+        pt_data->walk_matrix_sorted.resize(stops_lim);
         for(auto &stop_a : pt_data->stops){
             pt_data->walk_matrix[stop_a.id].resize(stops_lim);
+            pt_data->walk_matrix_sorted[stop_a.id].resize(stops_lim);
             for(auto &stop_b : pt_data->stops){
                 pt_data->walk_matrix[stop_a.id][stop_b.id] = dist2time(walk_distance(stop_a, stop_b));
+                pt_data->walk_matrix_sorted[stop_a.id][stop_b.id] = Vertex_lite((Stop_lite)stop_b.id, pt_data->walk_matrix[stop_a.id][stop_b.id]);
             }
+            sort(pt_data->walk_matrix_sorted[stop_a.id].begin() + 1, pt_data->walk_matrix_sorted[stop_a.id].end());
         }
         pt_data->walk_matrix_computed = true;
     }
@@ -146,7 +177,7 @@ void enrich_data(Data *pt_data){
                 Vertex_lite b = trip.route[j];
                 pt_data->stops[a.stop].reachable.push_back(b.stop);
                 // pt_data->stops[a.stop].connections[b.stop].push_back({b.time, trip.id});
-                pt_data->stops[a.stop].connections[b.stop].push_back(Edge_lite(a, b, trip.id));
+                pt_data->stops[a.stop].connections[b.stop].push_back(Edge_lite(a, b, (Trip_lite)trip.id));
             }
         }
     }
@@ -205,7 +236,7 @@ Data PT_data[4];
 int days_id[] = {6, 8, 3, 4}; // Mon-Thu, Fri, Sat, Sun
 string days_names[] = {"Mon-Thu", "Fri", "Sat", "Sun"};
 int day_lims = 1;
-// int zlotnicka = 1671;
+int zlotnicka = 1671;
 
 int main(){
     // Data data("./../Resources/GTFS/stops.txt", "./../Resources/GTFS/trips.txt", "./../Resources/GTFS/stop_times.txt");
@@ -216,8 +247,39 @@ int main(){
         enrich_data(&PT_data[i]);
     }
     cerr << "#1 STAGE FINISHED\n";
+    Stop_lite zlotnicka_id = PT_data[0].o2n_stop[zlotnicka];
 
 
+    // PT_data[0].stops[zlotnicka_id].print_name();
+    // for(auto i : PT_data[0].walk_matrix_sorted[zlotnicka_id]){
+    //     cout << i.time.em << " to ";
+    //     PT_data[0].stops[i.stop].print_name();
+    //     cout << "\n";
+    // }
+
+    // int max_reach = 0;
+    // int max_id = 0;
+    // int sum_reach = 0;
+    // vector<pair<int,int>> max_reach;
+    // for(int i = 0; i < stops_lim; i++){
+    //     // if(max_reach < PT_data[0].stops[i].reachable.size()){
+    //     //     max_reach = PT_data[0].stops[i].reachable.size();
+    //     //     max_id = i;
+    //     // }
+    //     max_reach.push_back({PT_data[0].stops[i].reachable.size(), i});
+    //     sum_reach += max_reach.back().first;
+    // }
+    // sort(max_reach.begin(), max_reach.end());
+    // for(int i = 0; i < max_reach.size(); i++){
+    //     cout << max_reach[i].first << " ";
+    //     PT_data[0].stops[max_reach[i].second].print_name();
+    //     cout << "\n";
+    //     // cout << max_reach[max_reach.size() - 1 - i].first << " ";
+    //     // PT_data[0].stops[max_reach[max_reach.size() - 1 - i].second].print_name();
+    //     // cout << "\n";
+    // }
+    // cout << sum_reach << "\n";
+    
     Stops_Data_Writer SDW("./../Resources/Preprocessed_Data/Common", "Stop_Data.bin");
     for(int stop_it = 1; stop_it < 13; stop_it++){
         SDW.write_content(PT_data[0].stops[stop_it]);
@@ -237,9 +299,9 @@ int main(){
         Destination_Lists_Writer DLW("./../Resources/Preprocessed_Data/" + days_names[i], "Dest_Data.bin");
         vector<Time_lite> reach_times;
         vector<pair<Stop_lite, Trip_lite>> predecessors;
-        for(int stop_it = 1; stop_it < 2; stop_it++){
-            for(int time_it = 0; time_it < minutes_in_day; time_it++){
-                generate_destination_list(Vertex_lite(stop_it, time_it), &PT_data[i], reach_times, predecessors);
+        for(int stop_it = 0; stop_it < stops_lim; stop_it++){
+            for(int time_it = 480; time_it < 481; time_it++){
+                generate_destination_list(Vertex_lite((Stop_lite)stop_it, time_it), &PT_data[i], reach_times, predecessors);
                 DLW.write_content(reach_times, predecessors);
             }
         }
@@ -247,6 +309,8 @@ int main(){
     }
 
     cerr << "ALL STAGES FINISHED\n";
+    // cerr << max_em << "\n";
+    // cerr << ctr_walk << " " << ctr_walk_good << "\n";
 
 
     // generate_destination_list(Vertex_lite(PT_data[0].o2n_stop[zlotnicka], Time_lite("08:00:00")), &PT_data[0]);

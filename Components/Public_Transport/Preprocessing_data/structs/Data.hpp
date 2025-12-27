@@ -20,6 +20,7 @@ struct Data{
     vector<Stop> stops;
     vector<Trip> trips;
     inline static vector<vector<Time_lite>> walk_matrix;
+    inline static vector<vector<Vertex_lite>> walk_matrix_sorted;
     inline static bool walk_matrix_computed = false;
     Data(){}
 };
