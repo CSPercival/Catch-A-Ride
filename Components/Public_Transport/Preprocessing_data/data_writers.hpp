@@ -30,7 +30,7 @@ struct Stops_Data_Writer{
 struct Trips_Data_Writer{
     ofstream file;
 
-    Trips_Data_Writer(string directory_path, string file_name);
+    Trips_Data_Writer(string directory_path, string file_name, int day_id);
     void write_content(Trip &trip);
     void destructor();
 };

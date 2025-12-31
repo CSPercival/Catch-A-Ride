@@ -2,3 +2,5 @@ Resources/
 *log.txt
 *log
 obj/
+__pycache__/*
+*preprocessor

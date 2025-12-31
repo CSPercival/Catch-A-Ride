@@ -9,10 +9,12 @@
 #include "Stop.hpp"
 #include "Trip.hpp"
 #include "Lites.hpp"
+#include "Day.hpp"
 
 using namespace std;
 
 struct Data{
+    Day id; // present day
     map<int, Stop_lite> o2n_stop;
     map<Stop_lite, int> n2o_stop;
     map<string, Trip_lite> o2n_trip;
@@ -20,7 +22,6 @@ struct Data{
     vector<Stop> stops;
     vector<Trip> trips;
     inline static vector<vector<Time_lite>> walk_matrix;
-    inline static bool walk_matrix_computed = false;
     Data(){}
 };
 
