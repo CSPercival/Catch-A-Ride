@@ -27,7 +27,7 @@ Edge_lite Stop::get_next(Time_lite u_time, Stop_lite v_id){
     auto it = lower_bound(connections[v_id].begin(), connections[v_id].end(), 
         Edge_lite(Vertex_lite(id, u_time), Vertex_lite(0, 0), 0));
     if(it == connections[v_id].end()){
-        it = connections[v_id].begin();
+        return Edge_lite(Vertex_lite(id, u_time), Vertex_lite(v_id, minutes_in_day * 7), 0);
     }
     return *it;
 }

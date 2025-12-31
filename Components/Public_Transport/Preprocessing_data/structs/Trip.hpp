@@ -14,6 +14,17 @@ struct Trip{
     vector<Vertex_lite> route;
     Trip() {}
     Trip(Trip_lite in_id, string &in_name) : id(in_id), line_name(in_name) {}
+    void print_name(){
+        cout << " (trip " << id << ", " << line_name << ") ";
+    }
+    void print_all(){
+        cout << "id: " << id << " name: " << line_name << "\n";
+        cout << "route: ";
+        for(auto i : route){
+            cout << " (" << i.stop << ", " << i.time << ") ";
+        }
+        cout << "\n";
+    }
 };
 
 #endif

@@ -13,3 +13,7 @@ void split_string(string &line, char splitter, vector<string> &ans){
     }
     line.pop_back();
 }
+
+Time_lite string2time(string t){
+    return (Time_lite)(stoi(t.substr(0, 2)) * 60 + stoi(t.substr(3, 2)));
+}
