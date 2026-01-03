@@ -10,6 +10,11 @@
 
 using namespace std;
 
+// int zlotnicka = 1749; // 1671 -> 1749
+// int psary_parkowa = 1222; // 3208 -> 1222
+// int psary_wolnosci = 2324; // 5599 ->2324
+// int most_grunwaldzki = 632; // 1504 -> 632
+
 namespace{
 
 double deg2rads(double deg){
@@ -158,7 +163,7 @@ int main(){
         TDW.destructor();
         cerr << "#3 STAGE FINISHED\n";
 
-        Destination_Lists_Writer DLW("./../Resources/Preprocessed_Data/" + day_names[day_id], "Test_Data.bin");
+        Destination_Lists_Writer DLW("./../Resources/Preprocessed_Data/" + day_names[day_id], "Schedule_Data.bin");
         vector<Time_lite> reach_times;
         vector<pair<Stop_lite, Trip_lite>> predecessors;
         for(Stop_lite stop_it = 1; stop_it < stops_lim; stop_it++){

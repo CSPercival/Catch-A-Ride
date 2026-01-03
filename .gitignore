@@ -2,6 +2,6 @@ Resources/
 *log.txt
 *log
 obj/
-__pycache__/*
+**/__pycache__/*
 *preprocessor
 .vscode/
