@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Python Router</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #map { height: 600px; width: 100%; }
+        #info { padding: 10px; background: #eee; }
+    </style>
+</head>
+<body>
+    <div id="info">Click two places on the map to find a route!</div>
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map').setView([51.109603609969334, 17.032424849065997], 13); // Centered on London
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        var points = [];
+        var routeLayer;
+
+        map.on('click', function(e) {
+            if (points.length >= 2) {
+                // Reset if we already have two points
+                points = [];
+                if (routeLayer) map.removeLayer(routeLayer);
+            }
+
+            var latlng = e.latlng;
+            points.push(latlng);
+            L.marker(latlng).addTo(map);
+
+            if (points.length === 2) {
+                var start = `${points[0].lng},${points[0].lat}`;
+                var end = `${points[1].lng},${points[1].lat}`;
+
+                // Ask our Python backend for the route
+                fetch(`/get_route?start=${start}&end=${end}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        var route = data.routes[0].geometry;
+                        routeLayer = L.geoJSON(route, {style: {color: 'blue', weight: 5}}).addTo(map);
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
