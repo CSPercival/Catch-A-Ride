@@ -4,8 +4,8 @@ import shutil
 
 def main():
     # resources_to_unzip["GTFS.zip", "XML.zip"]
-    resources_path = "./Resources"
-    resources_zipped_path = "./Resources-zipped"
+    resources_path = "./Components/Public_Transport/Resources"
+    resources_zipped_path = "./Components/Public_Transport/Resources-zipped"
 
     if(os.path.isdir(resources_path)):
         shutil.rmtree(resources_path)
