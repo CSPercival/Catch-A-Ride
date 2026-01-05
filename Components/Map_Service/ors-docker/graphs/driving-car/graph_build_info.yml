@@ -1,0 +1,63 @@
+graph_build_date: 2026-01-04T10:56:04+0000
+osm_date: 2026-01-02T21:20:59+0000
+graph_version: 4
+graph_size_bytes: 132156144
+profile_properties:
+  encoder_name: driving-car
+  build:
+    elevation: true
+    elevation_smoothing: false
+    encoder_flags_size: 8
+    instructions: true
+    optimize: false
+    traffic: false
+    interpolate_bridges_and_tunnels: true
+    location_index_resolution: 500
+    location_index_search_iterations: 4
+    encoder_options:
+      block_fords: false
+      turn_costs: true
+      use_acceleration: true
+      enable_custom_models: false
+    preparation:
+      min_network_size: 200
+      methods:
+        ch:
+          enabled: true
+          threads: 1
+          weightings: fastest
+        lm:
+          enabled: false
+          threads: 1
+          weightings: "recommended,shortest"
+          landmarks: 16
+        core:
+          enabled: true
+          threads: 1
+          weightings: "fastest,shortest"
+          landmarks: 64
+          lmsets: highways;allow_all
+        fastisochrones: {}
+    ext_storages:
+      WayCategory: {}
+      HeavyVehicle: {}
+      Tollways:
+        enabled: true
+      WaySurfaceType: {}
+      RoadAccessRestrictions:
+        enabled: true
+        use_for_warnings: true
+    encoded_values:
+      ford: true
+      highway: true
+      way_surface: true
+      way_type: true
+      road_environment: true
+      agricultural_access: true
+      bus_access: true
+      delivery_access: true
+      forestry_access: true
+      goods_access: true
+      hgv_access: true
+      hazmat_access: true
+    maximum_speed_lower_bound: 80.0
