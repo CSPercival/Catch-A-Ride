@@ -1,0 +1,43 @@
+graph_build_date: 2026-01-04T10:57:30+0000
+osm_date: 2026-01-02T21:20:59+0000
+graph_version: 4
+graph_size_bytes: 195069304
+profile_properties:
+  encoder_name: foot-walking
+  build:
+    elevation: true
+    elevation_smoothing: false
+    encoder_flags_size: 8
+    instructions: true
+    optimize: false
+    traffic: false
+    interpolate_bridges_and_tunnels: true
+    location_index_resolution: 500
+    location_index_search_iterations: 4
+    encoder_options:
+      block_fords: false
+      enable_custom_models: false
+    preparation:
+      min_network_size: 200
+      methods:
+        ch: {}
+        lm:
+          enabled: true
+          threads: 1
+          weightings: "recommended,shortest"
+          landmarks: 16
+        core: {}
+        fastisochrones: {}
+    ext_storages:
+      WayCategory: {}
+      WaySurfaceType: {}
+      HillIndex:
+        enabled: true
+      TrailDifficulty:
+        enabled: true
+    encoded_values:
+      ford: true
+      highway: true
+      way_surface: true
+      way_type: true
+    maximum_speed_lower_bound: 80.0

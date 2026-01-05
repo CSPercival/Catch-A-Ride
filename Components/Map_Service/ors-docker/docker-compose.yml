@@ -1,0 +1,13 @@
+services:
+  ors-app:
+    container_name: ors-app
+    image: openrouteservice/openrouteservice:latest
+    ports:
+      - "8085:8082"
+    volumes:
+      - ./graphs:/home/ors/graphs
+      - ./files:/home/ors/files
+      - ./config:/home/ors/config
+    environment:
+      - ORS_CONFIG_LOCATION=/home/ors/config/ors-config.yml
+      - JAVA_OPTS=-Xms2g -Xmx8g

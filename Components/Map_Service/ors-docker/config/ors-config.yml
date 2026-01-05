@@ -1,0 +1,22 @@
+ors:
+  engine:
+    graphs_root_path: /home/ors/graphs
+
+    profile_default:
+      build:
+        source_file: /home/ors/files/map-data.osm.pbf
+
+    profiles:
+      driving-car:
+        enabled: true
+      cycling-regular:
+        enabled: false
+      foot-walking:
+        enabled: true
+  services:
+    routing:
+      enabled: true
+    isochrones:
+      enabled: true
+    matrix:
+      enabled: true
