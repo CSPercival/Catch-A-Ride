@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Catch A Ride - CAR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base_style.css')}}" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="box input-data">
+            <h1>Car Page</h1>
+            <a href="{{ url_for('home_bp.show_site') }}">Home</a>
+        </div>
+        <div class="box small-map">Small Map</div>
+        <div class="box output-data">Route info</div>
+        <div class="box big-map">
+            <div id="map"></div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='scripts/map.js')}}"></script>
+</body>
+</html>
