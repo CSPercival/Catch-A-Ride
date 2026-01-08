@@ -7,10 +7,16 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
+    <a href="{{ url_for('home_bp.show_site') }}">Home</a>
     <div class="container">
         <div class="box input-data">
-            <h1>Car Page</h1>
-            <a href="{{ url_for('home_bp.show_site') }}">Home</a>
+            <form id="input">
+                <label>
+                    Start:
+                    <input type="text" id="start-address" name="start-address">
+                </label>
+                <div id="start-address-feedback"></div>
+            </form>
         </div>
         <div class="box small-map">Small Map</div>
         <div class="box output-data">Route info</div>
@@ -19,5 +25,9 @@
         </div>
     </div>
     <script src="{{ url_for('static', filename='scripts/map.js')}}"></script>
+    <script>
+        const validateAddressUrl = "{{ url_for('input_validator_bp.validate_address') }}"
+    </script>
+    <script src="{{ url_for('static', filename='scripts/input_validator.js')}}"></script>
 </body>
 </html>
