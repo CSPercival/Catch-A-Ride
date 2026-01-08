@@ -13,6 +13,7 @@ map.on('click', function(e) {
     }
 
     var latlng = e.latlng;
+    // console.log(latlng)
     points.push(latlng);
     if(curr_marker != null){
         curr_marker.remove()

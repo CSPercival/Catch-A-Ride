@@ -10,12 +10,18 @@
     <a href="{{ url_for('home_bp.show_site') }}">Home</a>
     <div class="container">
         <div class="box input-data">
-            <form id="input">
+            <form id="address-input">
                 <label>
                     Start:
-                    <input type="text" id="start-address" name="start-address">
+                    <input type="text" id="car-start-address" name="start-address">
                 </label>
-                <div id="start-address-feedback"></div>
+                <div id="car-start-address-feedback"></div>
+                <label>
+                    Finish:
+                    <input type="text" id="finish-address" name="finish-address">
+                </label>
+                <div id="finish-address-feedback"></div>
+                <button type="submit">Search</button>
             </form>
         </div>
         <div class="box small-map">Small Map</div>
@@ -27,7 +33,8 @@
     <script src="{{ url_for('static', filename='scripts/map.js')}}"></script>
     <script>
         const validateAddressUrl = "{{ url_for('input_validator_bp.validate_address') }}"
+        const submitFormUrl = "{{ url_for('solo_car_bp.compute_routes') }}"
     </script>
-    <script src="{{ url_for('static', filename='scripts/input_validator.js')}}"></script>
+    <script src="{{ url_for('static', filename='scripts/input_handler.js')}}"></script>
 </body>
 </html>

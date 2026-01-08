@@ -14,7 +14,7 @@ class MapClient:
             'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
             'Authorization': self.api_key
         }
-        with open('data/map_boundaries.geojson') as f:
+        with open('./Components/Map_Service/data/map_boundaries.geojson') as f:
             self.map_boundaries = json.load(f)
         self.map_polygon = shape(self.map_boundaries['features'][0]['geometry'])
     
