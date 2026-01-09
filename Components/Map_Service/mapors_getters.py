@@ -3,6 +3,8 @@ def single_distance(data):
     return data["routes"][0]["summary"]["distance"]
 def single_duration(data):
     return data["routes"][0]["summary"]["duration"]
+def single_geometry(data):
+    return data["routes"][0]["geometry"]
 def matrix_distances(data):
     return data["distances"]
 def matrix_durations(data):
