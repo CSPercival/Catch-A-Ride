@@ -19,7 +19,6 @@ const mapState = {
 };
 
 function _addMarker(lat, lng, popupContent){
-    console.log("Adding ", popupContent," marker at:", lat, lng);
     let marker = L.marker([lat, lng], {title: popupContent}).addTo(map);
     marker.bindPopup(popupContent);
     return marker
