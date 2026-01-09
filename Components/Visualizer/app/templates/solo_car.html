@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Catch A Ride - CAR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base_style.css')}}" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <a href="{{ url_for('home_bp.show_site') }}">Home</a>
+    <div class="container">
+        <div class="box input-data">
+            <form id="address-input">
+                <label>
+                    Start:
+                    <input type="text" id="car-start-address" name="start-address">
+                </label>
+                <div id="car-start-address-feedback"></div>
+                <label>
+                    Finish:
+                    <input type="text" id="finish-address" name="finish-address">
+                </label>
+                <div id="finish-address-feedback"></div>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="box small-map">Small Map</div>
+        <div class="box output-data">Route info</div>
+        <div class="box big-map">
+            <div id="map"></div>
+        </div>
+    </div>
+    <script>
+        window.APP_CONFIG = {
+            validateAddressUrl: "{{ url_for('input_validator_bp.validate_address') }}",
+            submitFormUrl: "{{ url_for('solo_car_bp.compute_routes') }}"
+        };
+    </script>
+    <script type="module" src="{{ url_for('static', filename='scripts/car_main.js') }}"></script>
+</body>
+</html>
