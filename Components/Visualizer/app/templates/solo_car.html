@@ -30,11 +30,12 @@
             <div id="map"></div>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='scripts/map.js')}}"></script>
     <script>
-        const validateAddressUrl = "{{ url_for('input_validator_bp.validate_address') }}"
-        const submitFormUrl = "{{ url_for('solo_car_bp.compute_routes') }}"
+        window.APP_CONFIG = {
+            validateAddressUrl: "{{ url_for('input_validator_bp.validate_address') }}",
+            submitFormUrl: "{{ url_for('solo_car_bp.compute_routes') }}"
+        };
     </script>
-    <script src="{{ url_for('static', filename='scripts/input_handler.js')}}"></script>
+    <script type="module" src="{{ url_for('static', filename='scripts/car_main.js') }}"></script>
 </body>
 </html>

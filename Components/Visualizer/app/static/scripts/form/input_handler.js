@@ -5,6 +5,8 @@
 // const finish_address_input    = document.getElementById("finish-address");
 // const finish_address_feedback = document.getElementById("finish-address-feedback");
 
+import { map, addMarker, updateCrucialMarker } from '../map/state_handler.js';
+
 const form_parts = {
   car_start_address: {
     input : document.getElementById("car-start-address"),
@@ -22,31 +24,47 @@ const form_parts = {
 };
 
 const form_state = {
-  car_start_address: {
-    name : "",
-    lat : null,
-    lon : null
-  },
   pt_start_address: {
     name : "",
     lat : null,
-    lon : null
+    lon : null,
+    valid : false
+  },
+  car_start_address: {
+    name : "",
+    lat : null,
+    lon : null,
+    valid : false
   },
   finish_address: {
     name : "",
     lat : null,
-    lon : null
+    lon : null,
+    valid : false
   },
 };
 
+export function updateInvalidAddress(coordinates){
+   const invalidKey = Object.keys(form_state).find(
+    (key) => form_state[key].valid === false && form_parts[key].input 
+  );
+  if (invalidKey) {
+    form_parts[invalidKey].input.value = coordinates.lng + ", " + coordinates.lat;
+    form_parts[invalidKey].feedback.textContent = "Coordinates set from map click.";
+    form_parts[invalidKey].feedback.style.color = "orange";
+    sendField(invalidKey);
+  }
+}
 
 function sendField(key) {
   if(form_parts[key].input.value == form_state[key].name){
-    console.log("Skipped", key);
+    // console.log("Skipped", key);
     return;
   }
-  console.log("Not skipped", key);
-  fetch(validateAddressUrl, {
+  form_state[key].name = form_parts[key].input.value;
+  form_state[key].valid = false;
+  // console.log("Not skipped", key);
+  fetch(window.APP_CONFIG.validateAddressUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -61,9 +79,13 @@ function sendField(key) {
       form_state[key].name = data.name;
       form_state[key].lat = data.lat;
       form_state[key].lon = data.lon;
+      form_state[key].valid = true;
       form_parts[key].input.value = data.name;
-      console.log("map:", map);
-      L.marker([data.lon, data.lat]).addTo(map);
+      
+      updateCrucialMarker(data.lat, data.lon, data.name, key === "car_start_address" ? "carLandmark" : key === "pt_start_address" ? "ptLandmark" : "finishLandmark");
+      // addMarker(data.lat, data.lon, data.name);
+      // console.log("map:", map);
+      // L.marker([data.lon, data.lat]).addTo(map);
       // { lat: 51.120671168668615, lng: 17.041908119820274 }
     }
   });
@@ -97,7 +119,7 @@ form_parts.submit.addEventListener("submit", (e) => {
   //   return;
   // }
 
-  fetch(submitFormUrl, {
+  fetch(window.APP_CONFIG.submitFormUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(form_state)
