@@ -1,4 +1,4 @@
-import { map, addMarker, updateCrucialMarker } from '../map/state_handler.js';
+import { map, addMarker, updateCrucialMarker, handleBackendOrders } from '../map/state_handler.js';
 
 const formParts = {
   carStartAddress: {
@@ -107,6 +107,6 @@ formParts.submit.addEventListener("submit", (e) => {
   .then(res => res.json())
   .then(data => {
     alert("Form submitted successfully!");
-    console.log("Server response:", data);
+    handleBackendOrders(data);
   });
 });
