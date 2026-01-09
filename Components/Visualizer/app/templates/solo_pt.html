@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Catch A Ride - PT</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <h1>Home Page</h1>
+    <p>Back to home</p>
+    <a href="{{ url_for('map_bp.show_map_one') }}">Home</a>
+    <script src="{{ url_for('static', filename='scripts/map.js')}}"></script>
+    <script>
+        const validateAddressUrl = "{{ url_for('input_validator_bp.validate_address') }}"
+        const submitFormUrl = "{{ url_for('solo_car_bp.compute_routes') }}"
+    </script>
+    <script src="{{ url_for('static', filename='scripts/input_handler.js')}}"></script>
+</body>
+</html>
