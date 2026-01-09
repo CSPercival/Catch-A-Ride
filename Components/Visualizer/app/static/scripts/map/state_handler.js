@@ -38,5 +38,5 @@ export function updateCrucialMarker(lat, lng, name, whichMarker){
         _removeMarker(mapState.crucialLandmarks[whichMarker]);
     }
 
-    mapState.crucialLandmarks[whichMarker] = _addMarker(lng, lat, namePrefixes[whichMarker] + name);
+    mapState.crucialLandmarks[whichMarker] = _addMarker(lat, lng, namePrefixes[whichMarker] + name);
 }

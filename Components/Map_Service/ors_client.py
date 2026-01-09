@@ -1,7 +1,10 @@
 import requests
+from Components.Map_Service.aux_functions import reverse_coordinates, reverse_coordinates_list
 from typing import Tuple, List
 
-Coordinate = Tuple[float, float]
+Coordinate = Tuple[float, float] # (lat, lng)
+
+# TODO reverse order of returned coordinates 
 
 class ORSClient:
     def __init__(self, profile: str, base_url: str = "http://localhost:8085/ors", timeout: int = 60):
@@ -27,8 +30,9 @@ class ORSClient:
 
     def simple_path(self, coordinates: List[Coordinate]) -> dict:
         data = {
-            "coordinates": coordinates,
+            "coordinates": reverse_coordinates_list(coordinates),
         }
+        # TODO reverse order of coordinates
         return self._post(f"v2/directions/{self.profile}", data)
     
     def matrix_s2d(self, sources: List[Coordinate], destinations: List[Coordinate], metrics : List[str] = None) -> dict:
@@ -38,29 +42,32 @@ class ORSClient:
         sources_indices = list(range(len(sources)))
         destinations_indices = list(range(len(sources), len(sources) + len(destinations)))
         data = {
-            "locations": locations,
+            "locations": reverse_coordinates_list(locations),
             "destinations": destinations_indices,
             "metrics": metrics,
             "sources": sources_indices
         }
+        # TODO reverse order of coordinates
         return self._post(f"v2/matrix/{self.profile}", data)
     
     def matrix(self, coordinates: List[Coordinate], metrics : List[str] = None) -> dict:
         if metrics is None:
             metrics = [self.default_metric]
         data = {
-            "locations": coordinates,
+            "locations": reverse_coordinates_list(coordinates),
             "metrics": metrics
         }
+        # TODO reverse order of coordinates
         return self._post(f"v2/matrix/{self.profile}", data)
     
     def isochrones(self, coordinates: Coordinate, range: List[int], range_type: str = None, intersections: bool = False) -> dict:
         data = {
-            "locations": [coordinates],
+            "locations": reverse_coordinates_list([coordinates]),
             "range": range,
         }
         if range_type:
             data["range_type"] = range_type
         if intersections:
             data["intersections"] = True
+        # TODO reverse order of coordinates
         return self._post(f"v2/isochrones/{self.profile}", data)

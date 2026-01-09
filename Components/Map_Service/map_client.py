@@ -3,7 +3,7 @@ import json
 from shapely.geometry import shape, Point
 from typing import Tuple, List
 
-Coordinate = Tuple[float, float]
+Coordinate = Tuple[float, float] # (lat, lng)
 
 class MapClient:
     def __init__(self, api_key: str = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjIzMjIxM2Q3YWY4ZjQzMGRhZjY4NTJmNzM3NTI3YTM2IiwiaCI6Im11cm11cjY0In0=", timeout: int = 60):
@@ -24,6 +24,12 @@ class MapClient:
         response.raise_for_status()
         return response.json()
     
+    def _reverse_coordinates(self, geo_response):
+        for feature in geo_response.get('features', []):
+            coord = feature['geometry']['coordinates']
+            feature['geometry']['coordinates'] = (coord[1], coord[0])
+        return geo_response
+        
     def geocode(self, text: str) -> dict:
         data = {
             "text": text,
@@ -31,18 +37,18 @@ class MapClient:
             "focus.point.lon": 17.0385,
             "focus.point.lat": 51.1079,
         }
-        return self._get("search", data)
+        return self._reverse_coordinates(self._get("search", data))
     
     def reverse_geocode(self, coordinates: Coordinate) -> dict:
         data = {
-            "point.lon": coordinates[0],
-            "point.lat": coordinates[1],
+            "point.lon": coordinates[1],
+            "point.lat": coordinates[0],
             "boundary.country": 'PL',
             "focus.point.lon": 17.0385,
             "focus.point.lat": 51.1079,
         }
-        return self._get("reverse", data)
+        return self._reverse_coordinates(self._get("reverse", data))
     
     def validate_coordinates(self, coordiante : Coordinate):
-        point = Point(coordiante[0], coordiante[1])
+        point = Point(coordiante[1], coordiante[0])
         return self.map_polygon.contains(point)

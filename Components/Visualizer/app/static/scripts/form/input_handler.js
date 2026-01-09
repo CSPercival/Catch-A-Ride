@@ -27,19 +27,19 @@ const form_state = {
   pt_start_address: {
     name : "",
     lat : null,
-    lon : null,
+    lng : null,
     valid : false
   },
   car_start_address: {
     name : "",
     lat : null,
-    lon : null,
+    lng : null,
     valid : false
   },
   finish_address: {
     name : "",
     lat : null,
-    lon : null,
+    lng : null,
     valid : false
   },
 };
@@ -49,7 +49,7 @@ export function updateInvalidAddress(coordinates){
     (key) => form_state[key].valid === false && form_parts[key].input 
   );
   if (invalidKey) {
-    form_parts[invalidKey].input.value = coordinates.lng + ", " + coordinates.lat;
+    form_parts[invalidKey].input.value = coordinates.lat + ", " + coordinates.lng;
     form_parts[invalidKey].feedback.textContent = "Coordinates set from map click.";
     form_parts[invalidKey].feedback.style.color = "orange";
     sendField(invalidKey);
@@ -78,14 +78,14 @@ function sendField(key) {
     if (data.valid) {
       form_state[key].name = data.name;
       form_state[key].lat = data.lat;
-      form_state[key].lon = data.lon;
+      form_state[key].lng = data.lng;
       form_state[key].valid = true;
       form_parts[key].input.value = data.name;
       
-      updateCrucialMarker(data.lat, data.lon, data.name, key === "car_start_address" ? "carLandmark" : key === "pt_start_address" ? "ptLandmark" : "finishLandmark");
-      // addMarker(data.lat, data.lon, data.name);
+      updateCrucialMarker(data.lat, data.lng, data.name, key === "car_start_address" ? "carLandmark" : key === "pt_start_address" ? "ptLandmark" : "finishLandmark");
+      // addMarker(data.lat, data.lng, data.name);
       // console.log("map:", map);
-      // L.marker([data.lon, data.lat]).addTo(map);
+      // L.marker([data.lng, data.lat]).addTo(map);
       // { lat: 51.120671168668615, lng: 17.041908119820274 }
     }
   });
