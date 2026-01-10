@@ -1,5 +1,4 @@
-#ifndef DAY_STRUCT
-#define DAY_STRUCT
+#pragma once
 
 #include<iostream>
 #include<string>
@@ -26,5 +25,3 @@ struct Day{
     bool operator==(const int &a) const{ return id == a;}
     bool operator==(const Day &a) const{ return id == a.id;}
 };
-
-#endif

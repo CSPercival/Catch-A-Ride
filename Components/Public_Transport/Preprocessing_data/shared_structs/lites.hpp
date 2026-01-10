@@ -1,10 +1,7 @@
-#ifndef LITES_STRUCT
-#define LITES_STRUCT
+#pragma once
 
 #include<string>
 #include<iostream>
-
-#include "../consts.hpp"
 
 using namespace std;
 
@@ -36,5 +33,3 @@ struct Edge_lite{
         return trip_id < a.trip_id;
     }  
 };
-
-#endif

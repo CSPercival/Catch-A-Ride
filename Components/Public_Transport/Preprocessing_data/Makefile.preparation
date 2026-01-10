@@ -1,12 +1,14 @@
-# Name of your final executable
-TARGET := preprocessor
+TARGET := preparator
+CXX    := g++
 
-# Compilers and flags
-CXX      := g++
-# CXXFLAGS := -Wall -Wextra -std=c++17 -I. -Istructs
-CXXFLAGS_RELEASE 	= -std=c++23 -Wall -O3 -Wextra -Wshadow -Wconversion -Wfloat-equal -I. -Istructs
-CXXFLAGS_DEBUG 		= -std=c++23 -Wall -O0 -Wextra -Wshadow -Wconversion -Wfloat-equal -g -fsanitize=address,undefined -I. -Istructs
-CPPFLAGS := -MMD -MP # Generates .d files to track header dependencies
+INCLUDE_FLAGS := -I. -Ishared_structs -Idata_preparation/structs -Idata_preparation
+
+CXXFLAGS_COMMON  := -std=c++23 -Wall -Wextra -Wshadow -Wconversion -Wfloat-equal $(INCLUDE_FLAGS)
+CXXFLAGS_RELEASE := $(CXXFLAGS_COMMON) -O3
+CXXFLAGS_DEBUG   := $(CXXFLAGS_COMMON) -O0 -g -fsanitize=address,undefined
+
+CPPFLAGS := -MMD -MP 
+
 
 MODE ?= release
 ifeq ($(MODE),release)
@@ -20,8 +22,8 @@ else
 endif
 
 # Directories
-SRC_DIRS := . structs
-OBJ_DIR  := obj
+SRC_DIRS := . shared_structs data_preparation/structs data_preparation
+OBJ_DIR  := obj-preparator
 
 # Find all .cpp files in the specified directories
 SRCS := $(shell find $(SRC_DIRS) -maxdepth 1 -name "*.cpp")
