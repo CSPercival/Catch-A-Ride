@@ -5,7 +5,6 @@ ors:
     profile_default:
       build:
         source_file: /home/ors/files/map-data.osm.pbf
-
     profiles:
       driving-car:
         enabled: true
@@ -13,10 +12,13 @@ ors:
         enabled: false
       foot-walking:
         enabled: true
-  services:
+  endpoints:
     routing:
       enabled: true
     isochrones:
       enabled: true
     matrix:
       enabled: true
+      maximum_routes: 10000
+      maximum_visited_nodes: 10000000
+      maximum_visited_nodes_matrix: 100000000
