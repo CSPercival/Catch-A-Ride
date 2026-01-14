@@ -1,10 +1,8 @@
-#ifndef LITES_STRUCT
-#define LITES_STRUCT
+#pragma once
 
 #include<string>
 #include<iostream>
-
-#include "../consts.hpp"
+#include <nlohmann/json.hpp>
 
 using namespace std;
 
@@ -22,6 +20,12 @@ struct Vertex_lite{
     }
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    Vertex_lite,
+    stop,
+    time
+)
+
 struct Edge_lite{
     Vertex_lite u, v;
     Trip_lite trip_id;
@@ -36,5 +40,3 @@ struct Edge_lite{
         return trip_id < a.trip_id;
     }  
 };
-
-#endif

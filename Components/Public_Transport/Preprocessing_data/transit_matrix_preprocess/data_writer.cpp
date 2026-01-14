@@ -1,9 +1,10 @@
-#include "data_writers.hpp"
-
 #include <cassert>
 #include <cstring>
 #include <iostream>
 #include <filesystem>
+
+#include "transit_matrix_preprocess/data_writer.hpp"
+
 using namespace std;
 
 void write_to_file(ofstream &file, string& data, int send_size){
@@ -41,11 +42,11 @@ void write_to_file(ofstream &file, long long data, int declared_size){
 
 // DESTINATION LISTS --------------------------------------------------------------------------------------------------------------
 
-Destination_Lists_Writer::Destination_Lists_Writer(string directory_path, string file_name){
+Destination_Lists_Writer::Destination_Lists_Writer(string directory_path, string file_name, int number_of_stops){
     filesystem::create_directories(directory_path);
     file.open(directory_path + "/" + file_name, ios::binary);
     assert(file.is_open());
-    write_to_file(file, stops_lim, 2);
+    write_to_file(file, number_of_stops, 2);
 }
 void Destination_Lists_Writer::write_content(vector<Time_lite> &reach_times, vector<pair<Stop_lite, Trip_lite>> &predecessors){
     assert(reach_times.size() == predecessors.size());
@@ -59,44 +60,4 @@ void Destination_Lists_Writer::destructor(){
     file.close();
 }
 
-
-// STOP DATA --------------------------------------------------------------------------------------------------------------
-
-Stops_Data_Writer::Stops_Data_Writer(string directory_path, string file_name){
-    filesystem::create_directories(directory_path);
-    file.open(directory_path + "/" + file_name, ios::binary);
-    assert(file.is_open());
-    write_to_file(file, stops_lim, 2);
-    write_to_file(file, stop_name_max, 1);
-    write_to_file(file, latitude_max, 1);
-    write_to_file(file, longtitude_max, 1);
-}
-void Stops_Data_Writer::write_content(Stop &stop){
-    write_to_file(file, stop.id, 2);
-    write_to_file(file, stop.name, stop_name_max);
-    write_to_file(file, stop.lat, latitude_max);
-    write_to_file(file, stop.lon, longtitude_max);
-
-}
-void Stops_Data_Writer::destructor(){
-    file.close();
-}
-
-
-// TRIP DATA --------------------------------------------------------------------------------------------------------------
-
-Trips_Data_Writer::Trips_Data_Writer(string directory_path, string file_name, int day_id){
-    filesystem::create_directories(directory_path);
-    file.open(directory_path + "/" + file_name, ios::binary);
-    assert(file.is_open());
-    write_to_file(file, trips_lim[day_id], 2);
-    write_to_file(file, line_name_max, 1);
-}
-void Trips_Data_Writer::write_content(Trip &trip){
-    write_to_file(file, trip.id, 2);
-    write_to_file(file, trip.line_name, line_name_max);
-}
-void Trips_Data_Writer::destructor(){
-    file.close();
-}
 

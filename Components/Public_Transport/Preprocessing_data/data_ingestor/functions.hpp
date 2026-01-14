@@ -4,7 +4,7 @@
 #include<string>
 #include<vector>
 
-#include "structs/Lites.hpp"
+#include "shared_structs/lites.hpp"
 
 using namespace std;
 
