@@ -14,7 +14,7 @@ struct Comparator{
 };
 
 void compute_travel_vector(
-    Vertex_lite start, Stops *stop_data, Trips *trip_data, vector<vector<double>> *walk_matrix, 
+    Vertex_lite start, Stops *stop_data, vector<vector<double>> *walk_matrix, 
     vector<Time_lite> &visited, vector<pair<Stop_lite, Trip_lite>> &predecessor){
     int stops_limit = stop_data->number_of_stops + 1;
     visited.assign(stops_limit, minutes_in_day);
@@ -28,7 +28,6 @@ void compute_travel_vector(
     while(!pq.empty()){
         v = pq.top();
         pq.pop();
-        // cout << "("<< v.stop << ", " << v.time << ")\n";
         if(visited[v.stop] + transfer_time < v.time) continue;
         for(auto reachable_stop_id : (*stop_data->stops[v.stop].reachable)){
             Edge_lite edge = stop_data->stops[v.stop].get_next(Time_lite(start.time + v.time), reachable_stop_id);

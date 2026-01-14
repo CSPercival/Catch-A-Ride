@@ -3,8 +3,7 @@ Resources/
 *log
 obj*/
 **/__pycache__/*
-*preprocessor
-*preparator
-*computer
+*ingestor
+*transit_engine
 .vscode/
 tmp*

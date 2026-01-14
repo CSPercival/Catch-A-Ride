@@ -1,7 +1,4 @@
 from Components.Map_Service import ORSClient
-import time
-import json
-from contextlib import contextmanager
 
 def compute_walk_matrix(stop_data):
     ors_client_walk = ORSClient("foot-walking")

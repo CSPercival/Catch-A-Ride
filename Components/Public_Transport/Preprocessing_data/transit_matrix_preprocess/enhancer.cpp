@@ -1,9 +1,7 @@
 #include "transit_matrix_preprocess/enhancer.hpp"
 
-void prepare(Stops *stop_data, Trips *trip_data){
-    cerr << "prepare\n"; 
+void prepare(Stops *stop_data){
     for(auto &stop : stop_data->stops){
-        // cerr << "for " << stop.id << "\n";
         if(!stop.reachable.has_value()) 
             stop.reachable = vector<Stop_lite>();
         if(!stop.connections.has_value()){
@@ -27,12 +25,10 @@ void enhance(Stops *stop_data, Trips *trip_data){
     }
 }
 
-void polish(Stops *stop_data, Trips *trip_data){
+void polish(Stops *stop_data){
     for(auto &stop : stop_data->stops){
         sort(stop.reachable->begin(), stop.reachable->end());
         stop.reachable->erase(unique(stop.reachable->begin(), stop.reachable->end()), stop.reachable->end());
-        // stop.print_all();
-        // cout << endl;
         int ptr = 0;
         for(auto &v : (*stop.connections)){
             auto tmpv = v;
@@ -52,11 +48,7 @@ void polish(Stops *stop_data, Trips *trip_data){
 }
 
 void enhance_data(Stops *stop_data, Trips *trip_data){
-    cerr << "ENHANCE #0\n";
-    prepare(stop_data, trip_data);
-    cerr << "ENHANCE #1\n";
+    prepare(stop_data);
     enhance(stop_data, trip_data);
-    cerr << "ENHANCE #2\n";
-    polish(stop_data, trip_data);
-    cerr << "ENHANCE #3\n";
+    polish(stop_data);
 }
