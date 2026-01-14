@@ -4,6 +4,7 @@
 #include<string>
 #include<cassert>
 #include "./../consts.hpp"
+#include <nlohmann/json.hpp>
 
 using namespace std;
 
@@ -25,3 +26,10 @@ struct Day{
     bool operator==(const int &a) const{ return id == a;}
     bool operator==(const Day &a) const{ return id == a.id;}
 };
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    Day,
+    id,
+    variant,
+    name
+)

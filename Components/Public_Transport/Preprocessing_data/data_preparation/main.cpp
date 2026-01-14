@@ -1,10 +1,10 @@
 #include <iostream>
 #include <filesystem>
 
-#include "data_parsers.hpp"
-#include "data_printers.hpp"
-#include "structs/stops.hpp"
-#include "structs/trips.hpp"
+#include "data_preparation/data_parsers.hpp"
+#include "data_preparation/data_printers.hpp"
+#include "shared_structs/stops.hpp"
+#include "shared_structs/trips.hpp"
 
 using namespace std;
 

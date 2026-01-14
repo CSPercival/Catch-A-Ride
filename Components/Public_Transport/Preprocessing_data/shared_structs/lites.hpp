@@ -2,6 +2,7 @@
 
 #include<string>
 #include<iostream>
+#include <nlohmann/json.hpp>
 
 using namespace std;
 
@@ -18,6 +19,12 @@ struct Vertex_lite{
         return time < a.time || (time == a.time && stop < a.stop);
     }
 };
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    Vertex_lite,
+    stop,
+    time
+)
 
 struct Edge_lite{
     Vertex_lite u, v;

@@ -1,7 +1,7 @@
 TARGET := computer
 CXX    := g++
 
-INCLUDE_FLAGS := -I. -Ishared_structs -Icomputing_travel_matrix/structs -Icomputing_travel_matrix
+INCLUDE_FLAGS := -I. 
 
 CXXFLAGS_COMMON  := -std=c++23 -Wall -Wextra -Wshadow -Wconversion -Wfloat-equal $(INCLUDE_FLAGS)
 CXXFLAGS_RELEASE := $(CXXFLAGS_COMMON) -O3

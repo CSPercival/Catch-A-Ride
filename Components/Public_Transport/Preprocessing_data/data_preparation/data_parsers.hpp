@@ -2,8 +2,8 @@
 
 #include<string>
 
-#include "structs/stops.hpp"
-#include "structs/trips.hpp"
+#include "shared_structs/stops.hpp"
+#include "shared_structs/trips.hpp"
 
 using namespace std;
 

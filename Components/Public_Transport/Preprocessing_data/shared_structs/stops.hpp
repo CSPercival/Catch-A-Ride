@@ -5,6 +5,7 @@
 #include<vector>
 #include<map>
 #include<optional>
+#include <nlohmann/json.hpp>
 
 #include "lites.hpp"
 
@@ -24,9 +25,27 @@ struct Stop{
     void print_name();
 };
 
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    Stop,
+    id,
+    old_id,
+    name,
+    lat,
+    lng
+)
+
 struct Stops{
     int number_of_stops;
     map<string, Stop_lite> id_mapping;
     map<string, vector<Stop_lite>> name_mapping;
     vector<Stop> stops;
 };
+
+
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    Stops,
+    number_of_stops,
+    id_mapping,
+    name_mapping,
+    stops
+)

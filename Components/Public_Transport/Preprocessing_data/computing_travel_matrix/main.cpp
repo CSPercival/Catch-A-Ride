@@ -1,12 +1,12 @@
 #include <iostream>
 
 #include "consts.hpp"
-#include "computer.hpp"
-#include "data_readers.hpp"
-#include "data_writer.hpp"
-#include "enhancer.hpp"
-#include "structs/stops.hpp"
-#include "structs/trips.hpp"
+#include "computing_travel_matrix/computer.hpp"
+#include "computing_travel_matrix/data_readers.hpp"
+#include "computing_travel_matrix/data_writer.hpp"
+#include "computing_travel_matrix/enhancer.hpp"
+#include "shared_structs/stops.hpp"
+#include "shared_structs/trips.hpp"
 
 using namespace std;
 
