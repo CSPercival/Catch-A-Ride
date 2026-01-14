@@ -1,8 +1,8 @@
 #include <iostream>
 #include <filesystem>
 
-#include "data_preparation/data_parsers.hpp"
-#include "data_preparation/data_printers.hpp"
+#include "data_ingestor/data_parsers.hpp"
+#include "data_ingestor/data_printers.hpp"
 #include "shared_structs/stops.hpp"
 #include "shared_structs/trips.hpp"
 

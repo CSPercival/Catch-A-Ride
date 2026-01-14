@@ -1,5 +1,5 @@
 import json
-from Components.Public_Transport.Preprocessing_data.computing_walk_matrix.compute import compute_walk_matrix
+from Components.Public_Transport.Preprocessing_data.walk_matrix_preprocess.compute import compute_walk_matrix
 
 def get_walk_matrix():
     with open('Components/Public_Transport/Resources/Preprocessed_Data/Common/Stops.json', 'r') as f:

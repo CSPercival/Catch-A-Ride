@@ -1,4 +1,4 @@
-TARGET := preparator
+TARGET := ingestor
 CXX    := g++
 
 INCLUDE_FLAGS := -I. 
@@ -22,8 +22,8 @@ else
 endif
 
 # Directories
-SRC_DIRS := . shared_structs data_preparation/structs data_preparation
-OBJ_DIR  := obj-preparator
+SRC_DIRS := . shared_structs data_ingestor
+OBJ_DIR  := obj-ingestor
 
 # Find all .cpp files in the specified directories
 SRCS := $(shell find $(SRC_DIRS) -maxdepth 1 -name "*.cpp")

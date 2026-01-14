@@ -1,5 +1,5 @@
 #include <fstream>
-#include "data_preparation/data_printers.hpp"
+#include "data_ingestor/data_printers.hpp"
 
 using json = nlohmann::json;
 

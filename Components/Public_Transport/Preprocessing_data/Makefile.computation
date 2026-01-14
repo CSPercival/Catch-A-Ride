@@ -1,4 +1,4 @@
-TARGET := computer
+TARGET := transit_engine
 CXX    := g++
 
 INCLUDE_FLAGS := -I. 
@@ -22,8 +22,8 @@ else
 endif
 
 # Directories
-SRC_DIRS := . shared_structs computing_travel_matrix/structs computing_travel_matrix
-OBJ_DIR  := obj-computer
+SRC_DIRS := . shared_structs transit_matrix_preprocess
+OBJ_DIR  := obj-transit_engine
 
 # Find all .cpp files in the specified directories
 SRCS := $(shell find $(SRC_DIRS) -maxdepth 1 -name "*.cpp")

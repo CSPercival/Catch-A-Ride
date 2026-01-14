@@ -4,8 +4,8 @@
 #include<assert.h>
 
 #include "consts.hpp"
-#include "data_preparation/data_parsers.hpp"
-#include "data_preparation/functions.hpp"
+#include "data_ingestor/data_parsers.hpp"
+#include "data_ingestor/functions.hpp"
 #include "shared_structs/day.hpp"
 
 using namespace std;
