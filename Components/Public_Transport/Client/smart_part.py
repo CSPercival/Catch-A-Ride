@@ -79,7 +79,7 @@ def enhance_route(route, stop_data, trip_data, start_time):
         stop = route['stops'][i + 1]
         trip = route['trips'][i]
         if trip['id'] == 0:
-            if i + 1 < len(route['trips']) and route['stops'][i + 1]['id'] == 0:
+            if i + 1 < len(route['trips']) and route['trips'][i + 1]['id'] == 0:
                 continue
             add_walk(new_route, last_stop, stop, start_time)
         else :

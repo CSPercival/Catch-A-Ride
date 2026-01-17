@@ -17,7 +17,7 @@ class Travel_Data_Reader:
         initial_offset = ((start_stop - 1) * self.minutes_in_day  + start_time) * self.single_record_size * num_stops + self.header['travel_header_length']
         schedule_record = [[0, 0, 0]]
         move_cursor(self.file, initial_offset)
-        for stop_id in range(1, num_stops):
+        for stop_id in range(1, num_stops + 1):
             single_record = []
             single_record.append(read_next_int(self.file, 2))  # arrival_time
             single_record.append(read_next_int(self.file, 2))  # previous stop
