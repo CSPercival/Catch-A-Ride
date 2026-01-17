@@ -1,9 +1,8 @@
-from flask import Flask
-# from Map_Service.ors_client import ORSClient
-# from ...Map_Service.map_client import MapClient
+from flask import Flask, current_app
 from Components.Map_Service import ORSClient
 from Components.Map_Service import MapClient
-
+from Components.Public_Transport.Client.pt_client import PTClient
+from Components.Meeting_Point_Service.client import MPSClient
 
 def create_app():
     app = Flask(__name__)
@@ -21,5 +20,7 @@ def create_app():
     app.ors_client_walk = ORSClient("foot-walking")
     app.ors_client_drive = ORSClient("driving-car")
     app.map_client = MapClient()
-
+    app.pt_client = PTClient(0, "XD", current_app.ors_client_walk)
+    app.mps_client = MPSClient(current_app.ors_client_walk, current_app.ors_client_drive, 
+                               current_app.map_client, current_app.pt_client)
     return app
