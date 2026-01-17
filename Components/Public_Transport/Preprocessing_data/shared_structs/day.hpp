@@ -1,10 +1,10 @@
-#ifndef DAY_STRUCT
-#define DAY_STRUCT
+#pragma once
 
 #include<iostream>
 #include<string>
 #include<cassert>
 #include "./../consts.hpp"
+#include <nlohmann/json.hpp>
 
 using namespace std;
 
@@ -27,4 +27,9 @@ struct Day{
     bool operator==(const Day &a) const{ return id == a.id;}
 };
 
-#endif
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(
+    Day,
+    id,
+    variant,
+    name
+)

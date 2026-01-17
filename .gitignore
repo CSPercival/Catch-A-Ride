@@ -1,8 +1,9 @@
 Resources/
 *log.txt
 *log
-obj/
+obj*/
 **/__pycache__/*
-*preprocessor
+*ingestor
+*transit_engine
 .vscode/
 tmp*
