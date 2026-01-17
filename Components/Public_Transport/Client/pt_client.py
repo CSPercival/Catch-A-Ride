@@ -75,7 +75,7 @@ class PTClient:
         end_stop_ids = stops_in_your_area(end, self.stop_data)
         end_stop_walk_times = matrix_durations(self.ors_walk_client.matrix_s2d([end], get_stops_coords(end_stop_ids, self.stop_data), ['duration']))[0]
         end_stop_reach_times = self.get_reach_times(start, end_stop_ids, start_time)
-        ans = [1e9, -1, -1] # duration, start stop, end stop
+        ans = [1e9, -1, -1] # reach time, start stop, end stop
         for end_id, end_walk, end_reach in zip(end_stop_ids, end_stop_walk_times, end_stop_reach_times):
             if ans[0] > round(end_walk/60) + end_reach[0]:
                 ans = [round(end_walk/60) + end_reach[0], end_reach[1], end_id]
