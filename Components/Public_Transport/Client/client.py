@@ -1,4 +1,4 @@
-from Components.Public_Transport.Client.data_readers.travel_data_reader import Travel_Data_Reader
+from Components.Public_Transport.Client.travel_data_reader import Travel_Data_Reader
 from Components.Public_Transport.Client.smart_part import find_raw_route, enhance_route, find_crucial_stops
 from Components.Public_Transport.Client.area_scanner import stops_in_your_area
 from Components.Public_Transport.Client.aux_functions import get_stops_coords, get_single_stop_coords
