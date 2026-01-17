@@ -4,7 +4,8 @@
 #include "transit_matrix_preprocess/engine.hpp"
 
 Time_lite dist2time(double dist){
-    return Time_lite((int)round(dist * 60.0 / 1000.0 / walking_speed_kmph));
+    // return Time_lite((int)round(dist * 60.0 / 1000.0 / walking_speed_kmph));
+    return Time_lite((int)round(dist / 60.0)); // in case walk_matrix is storing durations in seconds
 }
 
 struct Comparator{
