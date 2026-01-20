@@ -11,7 +11,7 @@
     <a href="{{ url_for('home_bp.show_site') }}">Home</a>
     <div class="container">
         <div class="box input-data">
-            <form id="address-input">
+            <form id="user-input">
                 <label>
                     Start:
                     <input type="text" id="car-start-address" name="start-address">
@@ -22,7 +22,7 @@
                     <input type="text" id="finish-address" name="finish-address">
                 </label>
                 <div id="finish-address-feedback"></div>
-                <button type="submit">Search</button>
+                <button type="button" id="form-submit-button">Search</button>
             </form>
         </div>
         <div class="box small-map">Small Map</div>
@@ -37,6 +37,6 @@
             submitFormUrl: "{{ url_for('solo_car_bp.compute_routes') }}"
         };
     </script>
-    <script type="module" src="{{ url_for('static', filename='scripts/car_main.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='scripts/carMain.js') }}"></script>
 </body>
 </html>
