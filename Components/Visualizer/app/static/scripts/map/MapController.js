@@ -1,6 +1,6 @@
 const markerNamePrefixes = {
-    carMarker : "Starting point (car): ",
-    ptMarker : "Starting point (public transport): ",
+    carStartMarker : "Starting point (car): ",
+    ptStartMarker : "Starting point (public transport): ",
     finishMarker : "Destination: ",
     meetingMarker : "Meeting point: "
 };
@@ -30,7 +30,7 @@ export class MapController {
         this.state.updateCrucialMarker(whichMarker, newMarker);
     }
 
-    clearCrucialMarker(){
+    clearCrucialMarker(whichMarker){
         let marker = this.state.getCrucialMarker(whichMarker);
         if(marker != null){
             this.view.removeMarker(marker);

@@ -1,1 +1,1 @@
-export const eventBus = new EventTarget();
+export const mainEventBus = new EventTarget();

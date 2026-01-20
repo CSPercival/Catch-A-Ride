@@ -1,8 +1,8 @@
 export class MapState {
     constructor(){
         this.crucialMarkers = {
-            carMarker : null,
-            ptMarker : null,
+            carStartMarker : null,
+            ptStartMarker : null,
             finishMarker : null,
             meetingMarker : null
         };
@@ -54,8 +54,8 @@ export class MapState {
 
     clearCrucialMarkers(){
         this.crucialMarkers = {
-            carMarker : null,
-            ptMarker : null,
+            carStartMarker : null,
+            ptStartMarker : null,
             finishMarker : null,
             meetingMarker : null
         };

@@ -1,13 +1,14 @@
-import { eventBus } from '../EventBus.js';
+// import { eventBus } from '../EventBus.js';
 
 export class MapEvents {
-    constructor(view){
+    constructor(view, mainEventBus){
         this.view = view;
+        this.mainEventBus = mainEventBus;
 
         this.view.bindClickEvent((event) => this.emitMapClick(event));
     }
 
     emitMapClick(event){
-        eventBus.dispatchEvent(new CustomEvent('mapClick', { detail: event.latlng }));
+        this.mainEventBus.dispatchEvent(new CustomEvent('mapClick', { detail: event.latlng }));
     }
 }
