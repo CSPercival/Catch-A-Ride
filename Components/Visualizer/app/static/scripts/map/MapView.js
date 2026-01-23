@@ -44,7 +44,9 @@ export class MapView {
         mapState.polylines.forEach(polyline => {
             bounds.extend(polyline.getBounds());
         });
-        this.map.fitBounds(bounds);
+        if(bounds.isValid()){
+            this.map.fitBounds(bounds, {maxZoom: this.map.getZoom(), padding: [20, 20] });
+        }
     }
     
     bindClickEvent(handler){
