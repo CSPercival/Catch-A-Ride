@@ -17,8 +17,11 @@ export class MainController{
             this.handleFormAddressChange(e.detail)
         );
 
+        mainEventBus.addEventListener('FormTimeChange', e => 
+            this.handleFormTimeChange(e.detail)
+        );
+
         mainEventBus.addEventListener('FormSubmit', e => 
-            // console.log('Form Submit:', e.detail);
             this.handleFormSubmit(e.detail)
         );
     }
@@ -29,15 +32,22 @@ export class MainController{
 
     handleFormAddressChange(event){
         this.map.clearPolylines();
+        this.map.clearCrucialMarker("meetingMarker");
         if(event.data.valid){
             this.map.crucialMarkerUpdate(formToMapKey(event.formKey), event.data.lat, event.data.lng, event.data.name);
         } else {
             this.map.clearCrucialMarker(formToMapKey(event.formKey));
         }
+        this.map.showAll();
+    }
+
+    handleFormTimeChange(event){
+        this.map.clearPolylines();
+        this.map.clearCrucialMarker("meetingMarker");
+        this.map.showAll();
     }
 
     handleFormSubmit(event){
-        console.log(event);
         fetch(window.APP_CONFIG.submitFormUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -45,7 +55,38 @@ export class MainController{
           })
           .then(res => res.json())
           .then(data => {
-            handleBackendOrders(data);
+            this.handleBackendOrders(data);
           });
+    }
+
+    handleBackendOrders(orders){
+        this.handleMapOrders(orders.map);
+        this.handleInfoOrders(orders.timeline);
+    }
+
+    handleMapOrders(orders){
+        console.log("MAP HANDLING",orders);
+        
+        if(orders.clearCommonMarkers) this.map.clearCommonMarkers();
+        if(orders.clearPolylines) this.map.clearPolylines();
+
+        orders.markersToAdd.forEach(marker => {
+            this.map.addCommonMarker(marker.lat, marker.lng, marker.popupContent);
+        });
+        
+        Object.keys(orders.mainMarkers).forEach(key =>{
+            this.map.crucialMarkerUpdate(key, orders.mainMarkers[key].lat, orders.mainMarkers[key].lng, orders.mainMarkers[key].name)
+        });
+
+        orders.polylinesToAdd.forEach(polylineData => {
+            const routeCoordinates = polyline.decode(polylineData.geometry, 5);
+            routeCoordinates.forEach(coord => { coord = [coord[1], coord[0]]; });
+            this.map.addPolyline(routeCoordinates, polylineData.options, polylineData.popupContent);
+        });
+        this.map.showAll();
+    }
+
+    handleInfoOrders(orders){
+        console.log("ROUTE INFO");
     }
 }

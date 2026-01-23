@@ -76,6 +76,29 @@ export class FormState {
         }
     }
 
+    updateTime(key, newValue){
+        if(this.times.hasOwnProperty(key)){
+            if(newValue == ""){
+                this.times[key] = {
+                    displayedString: newValue,
+                    hour: 0,
+                    minute: 0,
+                    valid: false
+                }
+            } else {
+                const [hours, minutes] = newValue.split(':')
+                this.times[key] = {
+                    displayedString: newValue,
+                    hour: Number(hours),
+                    minute: Number(minutes),
+                    valid: true
+                }
+            }
+        } else {
+            console.log("UPDATE FORM STATE ERROR: unknown key:", key)
+        }
+    }
+
     getState(){
         return {
             addresses : this.addresses,
