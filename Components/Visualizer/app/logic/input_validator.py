@@ -4,39 +4,44 @@ from Components.Map_Service.mapors_getters import geocode_coords, geocode_addres
 
 input_validator_bp = Blueprint('input_validator_bp', __name__, url_prefix='/validate')
 
+def get_point_from_geo_responce(geo_responce):
+    good_idx = 0
+    while geocode_coords(geo_responce, good_idx) != None and not current_app.map_client.validate_coordinates(geocode_coords(geo_responce, good_idx)):
+        good_idx += 1
+    if geocode_coords(geo_responce, good_idx) == None:
+        return None
+    return {
+        "name" : geocode_address(geo_responce, good_idx),
+        "lat" : geocode_coords(geo_responce, good_idx)[0],
+        "lng" : geocode_coords(geo_responce, good_idx)[1]
+    }
+
 def _validate_coords(lat, lng):
     if not current_app.map_client.validate_coordinates((lat, lng)):
-        return jsonify(valid=False, message="Coordinates out of bounds")
+        return jsonify(valid=False, name=lat + ", " + lng, message="Coordinates out of bounds")
     geo_results = current_app.map_client.reverse_geocode((lat, lng))
-    # print("results ", geo_results)
-    good_idx = 0
-    while geocode_coords(geo_results, good_idx) != None and not current_app.map_client.validate_coordinates(geocode_coords(geo_results, good_idx)):
-        good_idx += 1
-    if geocode_coords(geo_results, good_idx) == None:
-        return jsonify(valid=False, message="Coordinates out of bounds")
-    
-    return jsonify(
-        valid=True,
-        message="Valid coordinates",
-        name=geocode_address(geo_results, good_idx),
-        lat=geocode_coords(geo_results, good_idx)[0],
-        lng=geocode_coords(geo_results, good_idx)[1]
-    )    
-
-def _validate_address(address):
-    geo_results = current_app.map_client.geocode(address)
-    good_idx = 0
-    while geocode_coords(geo_results, good_idx) != None and not current_app.map_client.validate_coordinates(geocode_coords(geo_results, good_idx)):
-        good_idx += 1
-    if geocode_coords(geo_results, good_idx) == None:
-        return jsonify(valid=False, message="Place unknown or out of bounds")
-    
+    point_info = get_point_from_geo_responce(geo_results)
+    if point_info == None:
+        return jsonify(valid=False, name=lat + ", " + lng, message="Coordinates out of bounds")
     return jsonify(
         valid=True,
         message="Valid place",
-        name=geocode_address(geo_results, good_idx),
-        lat=geocode_coords(geo_results, good_idx)[0],
-        lng=geocode_coords(geo_results, good_idx)[1]
+        name=point_info['name'],
+        lat=point_info['lat'],
+        lng=point_info['lng']
+    )   
+
+def _validate_address(address):
+    geo_results = current_app.map_client.geocode(address)
+    point_info = get_point_from_geo_responce(geo_results)
+    if point_info == None:
+        return jsonify(valid=False, name=address, message="Place unknown or out of bounds")
+    return jsonify(
+        valid=True,
+        message="Valid place",
+        name=point_info['name'],
+        lat=point_info['lat'],
+        lng=point_info['lng']
     )
 
 
@@ -46,7 +51,7 @@ def validate_address():
     address = data.get("address", "")
     
     if address == "":
-        return jsonify(valid=False, message="Empty field")
+        return jsonify(valid=False, name=address, message="Empty field")
     
     latlng = address.replace(" ", "").split(",")
     if len(latlng) == 2:
