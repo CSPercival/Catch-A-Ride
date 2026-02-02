@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catch A Ride - DUO</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- We inline base styles for the demo, but you can keep base_style.css linked -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/timeline_style.css')}}" />
+
+    <style>
+        /* --- CORE DASHBOARD STYLES (Keep this or put in base_style.css) --- */
+        :root {
+            --bg-dark: #0f1115;
+            --bg-panel: rgba(20, 22, 28, 0.85); /* Slightly more opaque for readability */
+            --accent-primary: #3b82f6; /* Car Blue */
+            --accent-purple: #8b5cf6;  /* PT Purple */
+            --accent-duo: #10b981;     /* Duo Green */
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* SIDEBAR LAYOUT */
+        .sidebar {
+            width: 450px; /* Slightly wider for the timeline columns */
+            min-width: 350px;
+            height: 100%;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .scrollable-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* MAP */
+        .map-wrapper { flex-grow: 1; background: #1a1a1a; }
+        #map { height: 100%; width: 100%; }
+        .leaflet-tile-pane { filter: grayscale(100%) invert(100%) contrast(85%) brightness(90%); }
+        .leaflet-marker-pane, .leaflet-popup-pane { filter: none; }
+
+        /* FORM ELEMENTS */
+        .input-section { margin-bottom: 1.5rem; border-left: 2px solid var(--border-color); padding-left: 1rem; }
+        .input-section.car { border-color: var(--accent-primary); }
+        .input-section.pt { border-color: var(--accent-purple); }
+        .input-section { border-color: var(--accent-duo); }
+
+        
+        .section-label { 
+            font-family: 'Space Grotesk', sans-serif; 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            margin-bottom: 0.5rem; 
+            display: block; 
+            color: var(--text-muted);
+        }
+
+        .row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .col-grow { flex-grow: 1; }
+        .col-time { width: 110px; }
+
+        input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+        }
+        input:focus { outline: none; border-color: var(--accent-primary); }
+        
+        /* Time input specific fix */
+        input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        button#form-submit-button {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        button#form-submit-button:hover { filter: brightness(1.1); }
+        
+        .brand-header { padding: 1.5rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', bold; font-size: 1.2rem; }
+        .home-link { color: var(--text-muted); text-decoration: none; font-size: 0.8rem; border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 12px; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="brand-header">
+            <div class="logo">Catch A Ride <span style="color:var(--accent-duo)">// DUO</span></div>
+            <a href="{{ url_for('home_bp.show_site') }}" class="home-link">Home</a>
+        </div>
+
+        <div class="scrollable-content">
+            <!-- INPUT FORM -->
+            <form id="user-input">
+                
+                <!-- CAR SECTION -->
+                <div class="input-section car">
+                    <span class="section-label" style="color: var(--accent-primary);">Car Driver</span>
+                    <div class="row">
+                        <div class="col-grow">
+                            <input type="text" id="car-start-address" name="car-start-address" placeholder="Start Location">
+                        </div>
+                        <div class="col-time">
+                            <input type="time" id="car-start-time" name="car-start-time">
+                        </div>
+                    </div>
+                    <div id="car-start-address-feedback" style="color:red; font-size:0.8em;"></div>
+                </div>
+
+                <!-- PT SECTION -->
+                <div class="input-section pt">
+                    <span class="section-label" style="color: var(--accent-purple);">Public Transport</span>
+                    <div class="row">
+                        <div class="col-grow">
+                            <input type="text" id="pt-start-address" name="pt-start-address" placeholder="Start Location">
+                        </div>
+                        <div class="col-time">
+                            <input type="time" id="pt-start-time" name="pt-start-time">
+                        </div>
+                    </div>
+                    <div id="pt-start-address-feedback" style="color:red; font-size:0.8em;"></div>
+                </div>
+
+                <!-- FINISH -->
+                <div class="input-section finish">
+                    <span class="section-label" style="color: var(--accent-duo);">Destination</span>
+                    <input type="text" id="finish-address" name="finish-address" placeholder="Shared Destination">
+                    <div id="finish-address-feedback" style="color:red; font-size:0.8em;"></div>
+                </div>
+
+                <button type="button" id="form-submit-button">Calculate Sync</button>
+            </form>
+
+            <!-- TIMELINE RENDERER ROOT -->
+            <section class="timeline-root">
+                <header class="timeline-header">
+                    <h2>Timeline Schedule</h2>
+                </header>
+
+                <!-- This is the container the JS needs -->
+                <div class="scroll" id="scroll">
+                    <div class="timelines" id="timelines">
+                        
+                        <!-- CAR COLUMN -->
+                        <article class="timeline-col car-timeline">
+                            <div class="timeline-col-header" id="car-timeline-title">
+                                <strong>Car</strong>
+                                <small id="car-timeline-span">—</small>
+                            </div>
+                            <!-- JS appends .range elements here -->
+                            <div class="timeline-body" id="car-timeline-body"></div>
+                        </article>
+
+                        <!-- PT COLUMN -->
+                        <article class="timeline-col pt-timeline">
+                            <div class="timeline-col-header" id="pt-timeline-title">
+                                <strong>Public</strong>
+                                <small id="pt-timeline-span">—</small>
+                            </div>
+                            <div class="timeline-body" id="pt-timeline-body"></div>
+                        </article>
+
+                        <!-- DUO COLUMN -->
+                        <article class="timeline-col duo-timeline">
+                            <div class="timeline-col-header" id="duo-timeline-title">
+                                <strong>Sync</strong>
+                                <small id="duo-timeline-span">—</small>
+                            </div>
+                            <div class="timeline-body" id="duo-timeline-body"></div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="map-wrapper">
+        <div id="map"></div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@mapbox/polyline"></script>
+    <script>
+        window.APP_CONFIG = {
+            validateAddressUrl: "{{ url_for('input_validator_bp.validate_address') }}",
+            submitFormUrl: "{{ url_for('duo_bp.compute_routes') }}"
+        };
+    </script>
+    <script type="module" src="{{ url_for('static', filename='scripts/duoMain.js') }}"></script>
+</body>
+</html>

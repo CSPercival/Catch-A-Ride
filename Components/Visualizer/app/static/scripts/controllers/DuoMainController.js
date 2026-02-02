@@ -5,9 +5,10 @@ function formToMapKey(formKey){
 }
 
 export class MainController{
-    constructor(form, map){
-        this.form = form
-        this.map = map
+    constructor(form, map, timeline){
+        this.form = form;
+        this.map = map;
+        this.timeline = timeline;
 
         mainEventBus.addEventListener('mapClick', e => 
             this.handleMapClick(e)
@@ -31,6 +32,7 @@ export class MainController{
     }
 
     handleFormAddressChange(event){
+        this.timeline.clearTimelines();
         this.map.clearPolylines();
         this.map.clearCrucialMarker("meetingMarker");
         if(event.data.valid){
@@ -42,6 +44,7 @@ export class MainController{
     }
 
     handleFormTimeChange(event){
+        this.timeline.clearTimelines();
         this.map.clearPolylines();
         this.map.clearCrucialMarker("meetingMarker");
         this.map.showAll();
@@ -87,6 +90,7 @@ export class MainController{
     }
 
     handleInfoOrders(orders){
-        console.log("ROUTE INFO");
+        console.log("ROUTE INFO", orders);
+        this.timeline.handleOrders(orders);
     }
 }

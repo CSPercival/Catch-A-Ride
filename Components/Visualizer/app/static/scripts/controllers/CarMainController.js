@@ -34,6 +34,7 @@ export class MainController{
         } else {
             this.map.clearCrucialMarker(formToMapKey(event.formKey));
         }
+        this.map.showAll();
     }
 
     handleFormSubmit(event){

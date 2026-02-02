@@ -3,6 +3,7 @@
 <head>
     <title>Catch A Ride - DUO</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base_style.css')}}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/timeline_style.css')}}" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/@mapbox/polyline"></script>
@@ -52,7 +53,39 @@
             </form>
         </div>
         <div class="box small-map">Small Map</div>
-        <div class="box output-data">Route info</div>
+        <div class="box output-data">
+            <section class="timeline-root">
+                <header class="timeline-header">
+                    <h2>Timeline</h2>
+                </header>
+
+                <div class="scroll" id="scroll">
+                    <div class="timelines" id="timelines">
+                        <article class="car-timeline">
+                            <div class="car-timeline-title" id="car-timeline-title">
+                                <strong>Car</strong>
+                                <small id="car-timeline-span">—</small>
+                            </div>
+                            <div class="car-timeline-body" id="car-timeline-body"></div>
+                        </article>
+                        <article class="pt-timeline">
+                            <div class="pt-timeline-title" id="pt-timeline-title">
+                                <strong>Public Transport</strong>
+                                <small id="pt-timeline-span">—</small>
+                            </div>
+                            <div class="pt-timeline-body" id="pt-timeline-body"></div>
+                        </article>
+                        <article class="duo-timeline">
+                            <div class="duo-timeline-title" id="duo-timeline-title">
+                                <strong>Duo</strong>
+                                <small id="duo-timeline-span">—</small>
+                            </div>
+                            <div class="duo-timeline-body" id="duo-timeline-body"></div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
         <div class="box big-map">
             <div id="map"></div>
         </div>
