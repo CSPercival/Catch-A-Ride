@@ -12,6 +12,8 @@ the system determines whether it is beneficial for the two people to meet along 
 The solution is based on real road network data and public transport timetables for the Wrocław metropolitan area.  
 The application was developed as part of a bachelor’s thesis and is intended as a **research prototype**, not a production-ready system.
 
+![Visualizer screenshot](visualizer_screenshot.png)
+
 ---
 
 ## Requirements
