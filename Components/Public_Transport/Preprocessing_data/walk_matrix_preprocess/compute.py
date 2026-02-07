@@ -17,3 +17,24 @@ def compute_walk_matrix(stop_data):
         walk_matrix.append(matrix_durations(walk_matrix_response)[0])
         print(f"Computed walk times from stop {i}/{stop_data['number_of_stops']}", flush=True)
     return walk_matrix
+
+def compute_walk_isochrones(stop_data):
+    ors_client_walk = ORSClient("foot-walking")
+    # coordinates = []
+    # for stop in stop_data['stops']:
+    #     coordinates.append((stop['lat'], stop['lng']))
+    walk_isochrones = [{}]
+    for i in range(45, stop_data['number_of_stops'] + 1):
+        # current_stop = (f"{float(stop_data['stops'][i]['lat']):.7f}", f"{float(stop_data['stops'][i]['lng']):.7f}")
+        current_stop = (stop_data['stops'][i]['lat'], stop_data['stops'][i]['lng'])
+        print("Computing", current_stop, flush=True)
+        # ('51.1674065', '16.8911978')
+        # ('51.1674065000', '16.8911978100')
+        # coordinates[0] = current_stop
+        # walk_matrix_response = ors_client_walk.matrix_s2d([current_stop], coordinates)
+        # walk_matrix.append(walk_matrix_response['distances'][0])
+        # print(f"Computed walk distances from stop {i}/{stop_data['number_of_stops']}", flush=True)
+        walk_isochrone = ors_client_walk.isochrones([current_stop], [3600], interval=60)
+        walk_isochrones.append(walk_isochrone["features"])
+        print(f"Computed walk isochrone for stop {i}/{stop_data['number_of_stops']}", flush=True)
+    return walk_isochrones

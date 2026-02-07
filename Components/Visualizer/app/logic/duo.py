@@ -11,7 +11,7 @@ duo_bp = Blueprint('duo_bp', __name__)
 
 @duo_bp.route('/duo')
 def show_site():
-    return render_template('tmp6.html')
+    return render_template('temp_template.html')
 
 @duo_bp.route('/duo/computing', methods=["POST"])
 def compute_routes():
@@ -65,6 +65,9 @@ def compute_routes():
     print("Final meeting point", meeting_point, file=logfile)
 
     map_orders = MapOrders()
+    car_color = "#3b82f6"
+    pt_color = "#8b5cf6" 
+    duo_color = "#10b981"
     timeline_orders = TimelineOrders()
     timeline_orders.set_main_header(meeting_point['name'], min(carStartTime, ptStartTime), meeting_point_raw_data[1])
 
@@ -93,8 +96,8 @@ def compute_routes():
     print("pt", file=logfile)
     print(json.dumps(pt_route_info), file=logfile)
     
-    map_orders.add_car(driver_path1, f"Car route to meeting point\neta: {meeting_point_raw_data[3]}")
-    map_orders.add_car(driver_path2, f"Car route to finish\neta: {meeting_point_raw_data[1]}")
+    map_orders.add_car(driver_path1, f"Car route to meeting point\neta: {meeting_point_raw_data[3]}", car_color)
+    map_orders.add_car(driver_path2, f"Car route to finish\neta: {meeting_point_raw_data[1]}", duo_color)
     
     timeline_orders.set_little_header("car", carStartTime, meeting_point_raw_data[3])
     timeline_orders.add_car("car", driver_path1, carStartTime, "lime")
@@ -108,13 +111,15 @@ def compute_routes():
         segment_coords = []
         for stop in segment['route']:
             segment_coords.append((stop['lat'], stop['lng']))
+            segment['route'][0]['name'] = segment['route'][0]['name'].strip('"')
+            segment['route'][-1]['name'] = segment['route'][-1]['name'].strip('"')
         if segment['type'] == 'walk':
             pt_path = current_app.ors_client_walk.simple_path(segment_coords)
-            map_orders.add_walk(pt_path, f"Walk to: {segment['route'][-1]['name']}")
+            map_orders.add_walk(pt_path, f"Walk to: {segment['route'][-1]['name']}", pt_color)
             timeline_orders.add_pt_walk("pt", segment)
         else:
             pt_path = current_app.ors_client_drive.simple_path(segment_coords)
-            map_orders.add_car(pt_path, f"Take line {segment['line_name']} to: {segment['route'][-1]['name']}")
+            map_orders.add_car(pt_path, f"Take line {segment['line_name']} to: {segment['route'][-1]['name']}", pt_color)
             timeline_orders.add_pt("pt", segment)
 
 

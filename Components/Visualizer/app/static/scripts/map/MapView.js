@@ -3,8 +3,9 @@ export class MapView {
         this.map = mapInstance;
     }
 
-    addMarker(lat, lng, popupContent){
-        let marker = L.marker([lat, lng], {title: popupContent}).addTo(this.map);
+    addMarker(lat, lng, popupContent, options){
+        var icon = L.BeautifyIcon.icon(options);
+        let marker = L.marker([lat, lng], {title: popupContent, icon: icon}).addTo(this.map);
         marker.bindPopup(popupContent);
         return marker
     }

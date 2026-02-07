@@ -13,10 +13,13 @@ ors:
       foot-walking:
         enabled: true
   endpoints:
+    snap:
+      enabled: true
     routing:
       enabled: true
     isochrones:
       enabled: true
+      maximum_intervals: 240
     matrix:
       enabled: true
       maximum_routes: 10000

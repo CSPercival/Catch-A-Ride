@@ -96,6 +96,6 @@ int main(){
         enhance_data(&stop_data, &trip_data);
         log_time();
         cerr << "#2\n";
-        produce_travel_matrix(resources_path + day_names[day_id], "Travel_Data.bin", thread::hardware_concurrency());
+        produce_travel_matrix(resources_path + day_names[day_id], "Travel_Data.bin", (thread::hardware_concurrency()) * 3 / 2);
     }
 }

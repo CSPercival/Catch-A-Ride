@@ -1,5 +1,6 @@
 from Components.Map_Service.mapors_getters import single_duration
 from Components.Meeting_Point_Service.strategy_all_stops import allStopsStrategy
+from Components.Meeting_Point_Service.strategy_isochrones import isochronesStrategy
 from typing import Tuple
 
 Coordinate = Tuple[float, float] # (lat, lng)
@@ -14,6 +15,8 @@ class MPSClient:
         self.pt_client = pt_client
         self.stop_data = pt_client.stop_data
         self.strategy = allStopsStrategy(self)
+        # self.strategy = isochronesStrategy(self)
+
     
     def check_meeting_point(self, meeting_point_coord: Coordinate, car_start_coord: Coordinate, pt_start_coord: Coordinate, 
                             finish_coord: Coordinate, car_start_time: int, pt_start_time: int):
@@ -26,6 +29,9 @@ class MPSClient:
             ) / 60)
         return final_finish_reach_time
 
+    # coords of mp, eta, mp eta, car mp eta, pt mp eta
+    # TODO check if (forgot)
+    # TODO check if car can get to pt_start_coord before pt_start_time => no mp needed
     def get_meeting_point(self, car_start_coord: Coordinate, pt_start_coord: Coordinate, finish_coord: Coordinate, 
                            car_start_time: int, pt_start_time: int):
         pt_finish_reach_time = self.pt_client.get_reach_time(pt_start_coord, finish_coord, pt_start_time)[0]
@@ -35,10 +41,13 @@ class MPSClient:
         if(pt_finish_reach_time <= car_finish_reach_time):
             # pt reach finish faster. No meeting point needed
             return [finish_coord, car_finish_reach_time, car_finish_reach_time, car_finish_reach_time, pt_finish_reach_time, 0]
-        result = self.strategy.find_meeting_point(car_start_coord, pt_start_coord, finish_coord, car_start_time, pt_start_time)
+        result = self.strategy.find_meeting_point(car_start_coord, pt_start_coord, finish_coord, car_start_time, pt_start_time, [car_finish_reach_time, pt_finish_reach_time])
         if result[1] >= pt_finish_reach_time:
             # no meeting point is better than direct routes
             return [finish_coord, pt_finish_reach_time, pt_finish_reach_time, car_finish_reach_time, pt_finish_reach_time, 0]
         return result + [1]
 
+    def test_strategy(self, car_start_coord: Coordinate, pt_start_coord: Coordinate, finish_coord: Coordinate, 
+                           car_start_time: int, pt_start_time: int):
+        return self.strategy.find_meeting_point(car_start_coord, pt_start_coord, finish_coord, car_start_time, pt_start_time, [0])
         

@@ -5,6 +5,14 @@ def single_duration(data):
     return data["routes"][0]["summary"]["duration"]
 def single_geometry(data):
     return data["routes"][0]["geometry"]
+def single_segment_distance(data, idx=0):
+    return data["routes"][0]["segments"][idx]["distance"]
+def single_segment_distances(data, idx=0):
+    return [segment["distance"] for segment in data["routes"][0]["segments"]]
+def single_segment_duration(data, idx=0):
+    return data["routes"][0]["segments"][idx]["duration"]
+def single_segment_durations(data, idx=0):
+    return [segment["duration"] for segment in data["routes"][0]["segments"]]
 def matrix_distances(data):
     return data["distances"]
 def matrix_durations(data):

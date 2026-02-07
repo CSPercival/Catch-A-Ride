@@ -79,26 +79,26 @@ class MapOrders:
                     return
         self.markersToAdd.append(new_marker)
 
-    def add_walk(self, ors_walk_responce, popup_content):
-        random_color = random.choice(self.colors)
+    def add_walk(self, ors_walk_responce, popup_content, color):
+        # random_color = random.choice(self.colors)
         new_polyline = {
             "geometry": single_geometry(ors_walk_responce),
             "options": {
-                "color": random_color,
+                "color": color,
                 "dashArray" : '10, 10'
             },
-            "popupContent": popup_content + random_color
+            "popupContent": popup_content
         }
         self.polylinesToAdd.append(new_polyline)
 
-    def add_car(self, ors_drive_responce, popup_content):
-        random_color = random.choice(self.colors)
+    def add_car(self, ors_drive_responce, popup_content, color):
+        # random_color = random.choice(self.colors)
         new_polyline = {
             "geometry": single_geometry(ors_drive_responce),
             "options": {
-                "color": random_color,
+                "color": color,
             },
-            "popupContent": popup_content + random_color
+            "popupContent": popup_content
         }
         self.polylinesToAdd.append(new_polyline)
         

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catch A Ride - DUO</title>
+    <title>Catch A Ride</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- We inline base styles for the demo, but you can keep base_style.css linked -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/timeline_style.css')}}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/masajid390/BeautifyMarker/leaflet-beautify-marker-icon.css" />
 
     <style>
         /* --- CORE DASHBOARD STYLES (Keep this or put in base_style.css) --- */
@@ -125,7 +127,7 @@
 <body>
     <div class="sidebar">
         <div class="brand-header">
-            <div class="logo">Catch A Ride <span style="color:var(--accent-duo)">// DUO</span></div>
+            <div class="logo">Catch A Ride</span></div>
             <a href="{{ url_for('home_bp.show_site') }}" class="home-link">Home</a>
         </div>
 
@@ -174,7 +176,8 @@
             <!-- TIMELINE RENDERER ROOT -->
             <section class="timeline-root">
                 <header class="timeline-header">
-                    <h2>Timeline Schedule</h2>
+                    <h2>Route Schedule</h2>
+                    <h2>Meeting place:</h2>
                 </header>
 
                 <!-- This is the container the JS needs -->
@@ -222,6 +225,7 @@
     <!-- SCRIPTS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/@mapbox/polyline"></script>
+    <script src="https://cdn.jsdelivr.net/gh/masajid390/BeautifyMarker/leaflet-beautify-marker-icon.js"></script>
     <script>
         window.APP_CONFIG = {
             validateAddressUrl: "{{ url_for('input_validator_bp.validate_address') }}",

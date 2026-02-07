@@ -23,7 +23,7 @@ export class TimelineRenderer {
 
     // 2) wyczyść i ustaw wysokości
     this.view.clearView();
-    this.view.setTimelineHeights(heightPx);
+    // this.view.setTimelineHeights(heightPx);
 
     // 3) ustaw spany w nagłówkach (opcjonalnie)
     this.view.setTimelineSpan("car", this.computeSpan(timelines.car.line));
@@ -45,24 +45,35 @@ export class TimelineRenderer {
 
   renderTimeline(container, line, globalStartTime, kind) {
     // line powinno być posortowane po startTimeNumber
-    let lastBottom = -Infinity;
+    // let lastBottom = -Infinity;
 
+    // for (const seg of line) {
+    //   const startMin = seg.startTimeNumber - globalStartTime;
+    //   const durMin = Math.max(1, seg.finishTimeNumber - seg.startTimeNumber);
+
+    //   let top = Math.round(startMin * this.pxPerMin) + this.topPadding;
+    //   let height = Math.max(this.minBlockHeight, Math.round(durMin * this.pxPerMin));
+
+    //   // prosta antykolizja (czytelność)
+    //   if (top < lastBottom + this.minGap) top = lastBottom + this.minGap;
+    //   lastBottom = top + height;
+
+    //   const node = document.createElement("article");
+    //   node.className = `range ${kind} minH`;
+    //   node.style.top = top + "px";
+    //   node.style.height = height + "px";
+
+    //   const timeText = `${seg.startTimeString} → ${seg.finishTimeString} • ${seg.durationString}`;
+    container.innerHTML = ''; 
+
+    // 2. Simply iterate and append. No 'top' or 'height' calculations needed.
     for (const seg of line) {
-      const startMin = seg.startTimeNumber - globalStartTime;
-      const durMin = Math.max(1, seg.finishTimeNumber - seg.startTimeNumber);
-
-      let top = Math.round(startMin * this.pxPerMin) + this.topPadding;
-      let height = Math.max(this.minBlockHeight, Math.round(durMin * this.pxPerMin));
-
-      // prosta antykolizja (czytelność)
-      if (top < lastBottom + this.minGap) top = lastBottom + this.minGap;
-      lastBottom = top + height;
-
+      
       const node = document.createElement("article");
-      node.className = `range ${kind} minH`;
-      node.style.top = top + "px";
-      node.style.height = height + "px";
-
+      // Use a new class 'range-relative' or reuse 'range' but override CSS
+      node.className = `range relative-block ${kind}`; 
+      
+      // Calculate duration string for display, but NOT for height
       const timeText = `${seg.startTimeString} → ${seg.finishTimeString} • ${seg.durationString}`;
 
       node.innerHTML = `

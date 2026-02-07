@@ -6,6 +6,9 @@ Coordinate = Tuple[float, float] # (lat, lng)
 
 # TODO reverse order of returned coordinates 
 
+# def revcoord(coords : Coordinate):
+#     return [coords[1], coords[0]]
+
 class ORSClient:
     def __init__(self, profile: str, base_url: str = "http://localhost:8085/ors", timeout: int = 60):
         self.base_url = base_url.rstrip('/')
@@ -20,6 +23,8 @@ class ORSClient:
     def _post(self, query_url: str, data: dict) -> dict:
         url = f"{self.base_url}/{query_url}"
         response = requests.post(url, json=data, timeout=self.timeout)
+        print(response, flush=True)
+        print(response.text, flush=True)
         response.raise_for_status()
         return response.json()
     
@@ -27,6 +32,14 @@ class ORSClient:
         valid_profiles = ["driving-car", "foot-walking"]
         if not profile in valid_profiles:
             raise ValueError(f"Invalid profile: {profile}")
+        
+    def _snap(self, coordinate: Coordinate, radius = 10) -> Coordinate:
+        data = {
+            "locations": [reverse_coordinates(coordinate)],
+            "radius": radius
+        }
+        res = self._post(f"v2/snap/{self.profile}", data)
+        return reverse_coordinates(res['locations'][0]['location'])
 
     def simple_path(self, coordinates: List[Coordinate]) -> dict:
         data = {
@@ -60,14 +73,18 @@ class ORSClient:
         # TODO reverse order of coordinates
         return self._post(f"v2/matrix/{self.profile}", data)
     
-    def isochrones(self, coordinates: Coordinate, range: List[int], range_type: str = None, intersections: bool = False) -> dict:
+    def isochrones(self, coordinates: List[Coordinate], range: List[int], range_type: str = None, intersections: bool = False, interval: int = None) -> dict:
+        coordinates = [self._snap(coords) for coords in coordinates]
+        print("coords after snapping:", coordinates)
         data = {
-            "locations": reverse_coordinates_list([coordinates]),
+            "locations": reverse_coordinates_list(coordinates),
             "range": range,
         }
         if range_type:
             data["range_type"] = range_type
         if intersections:
-            data["intersections"] = True
+            data["intersections"] = "true"
+        if interval:
+            data["interval"] = interval
         # TODO reverse order of coordinates
         return self._post(f"v2/isochrones/{self.profile}", data)
