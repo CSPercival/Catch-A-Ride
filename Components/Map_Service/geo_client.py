@@ -5,7 +5,7 @@ from typing import Tuple, List
 
 Coordinate = Tuple[float, float] # (lat, lng)
 
-class MapClient:
+class GeoClient:
     def __init__(self, api_key: str = "eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjIzMjIxM2Q3YWY4ZjQzMGRhZjY4NTJmNzM3NTI3YTM2IiwiaCI6Im11cm11cjY0In0=", timeout: int = 60):
         self.api_key = api_key
         self.timeout = timeout

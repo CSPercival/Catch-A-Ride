@@ -1,5 +1,5 @@
 from .ors_client import ORSClient
-from .map_client import MapClient
+from .geo_client import GeoClient
 
 __all__ = ["ORSClient"]
-__all__ = ["MapClient"]
+__all__ = ["GeoClient"]

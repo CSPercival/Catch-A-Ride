@@ -1,6 +1,6 @@
 from flask import Flask, current_app
 from Components.Map_Service import ORSClient
-from Components.Map_Service import MapClient
+from Components.Map_Service import GeoClient
 from Components.Public_Transport.Client.pt_client import PTClient
 from Components.Meeting_Point_Service.client import MPSClient
 # from Components.Visualizer.app.logic.order_creator import MapOrders
@@ -22,14 +22,14 @@ def create_app():
 
     ors_client_walk = ORSClient("foot-walking")
     ors_client_drive = ORSClient("driving-car")
-    map_client = MapClient()
+    geo_client = GeoClient()
     pt_client = PTClient(0, "XD", ors_client_walk)
     mps_client = MPSClient(ors_client_walk, ors_client_drive, 
-                               map_client, pt_client)
+                               geo_client, pt_client)
 
     app.ors_client_walk = ors_client_walk
     app.ors_client_drive = ors_client_drive
-    app.map_client = map_client
+    app.geo_client = geo_client
     app.pt_client = pt_client
     app.mps_client = mps_client
     # app.map_orders = MapOrders()

@@ -13,12 +13,7 @@ This component is based on **OpenRouteService (ORS)** and **OpenStreetMap (OSM)*
 ---
 
 ### Public Transport Service
-Implements a custom routing engine for public transportation based on GTFS data.  
-It supports advanced queries such as:
-- travel time computation between multiple origins and destinations,
-- route reconstruction,
-- time-dependent queries,
-- public transport isochrones.
+Implements a custom routing engine for public transportation based on GTFS data. 
 
 The service relies heavily on preprocessing to ensure fast query response times during runtime.
 
@@ -27,18 +22,9 @@ The service relies heavily on preprocessing to ensure fast query response times 
 ### Meeting Point Service
 Contains the core logic for determining the optimal meeting point between a car driver and a public transport passenger.
 
-This component implements and compares multiple strategies, including:
-- a discrete strategy based on public transport stops,
-- a continuous strategy based on isochrone intersections.
-
 Its output is an optimal meeting location.
 
 ---
 
 ### Visualizer
 A lightweight web-based interface used to present the results of the computations.
-
-The visualizer displays:
-- the selected meeting point,
-- individual travel routes,
-- intermediate segments of the journey on an interactive map.

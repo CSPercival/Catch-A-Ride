@@ -66,7 +66,7 @@ http://127.0.0.1:5000
 - The system relies on static models of traffic and public transport schedules.
 - The web interface is intended mainly for visualization and demonstration purposes.
 
---
+---
 
 ## Data Sources and Attribution
 

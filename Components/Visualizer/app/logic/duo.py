@@ -55,7 +55,7 @@ def compute_routes():
     print("thinked for: ", time.perf_counter() - counter_start_time, file=logfile)
 
     meeting_point = get_point_from_geo_responce(
-        current_app.map_client.reverse_geocode(
+        current_app.geo_client.reverse_geocode(
             (meeting_point_raw_data[0][0], meeting_point_raw_data[0][1])
         )
     )

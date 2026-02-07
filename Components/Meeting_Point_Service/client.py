@@ -8,10 +8,10 @@ Coordinate = Tuple[float, float] # (lat, lng)
 # TODO reverse order of returned coordinates 
 
 class MPSClient:
-    def __init__(self, ors_walk_client, ors_drive_client, map_client, pt_client):
+    def __init__(self, ors_walk_client, ors_drive_client, geo_client, pt_client):
         self.ors_walk_client = ors_walk_client
         self.ors_drive_client = ors_drive_client
-        self.map_client = map_client
+        self.geo_client = geo_client
         self.pt_client = pt_client
         self.stop_data = pt_client.stop_data
         self.strategy = allStopsStrategy(self)

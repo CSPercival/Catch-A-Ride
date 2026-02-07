@@ -6,7 +6,7 @@ input_validator_bp = Blueprint('input_validator_bp', __name__, url_prefix='/vali
 
 def get_point_from_geo_responce(geo_responce):
     good_idx = 0
-    while geocode_coords(geo_responce, good_idx) != None and not current_app.map_client.validate_coordinates(geocode_coords(geo_responce, good_idx)):
+    while geocode_coords(geo_responce, good_idx) != None and not current_app.geo_client.validate_coordinates(geocode_coords(geo_responce, good_idx)):
         good_idx += 1
     if geocode_coords(geo_responce, good_idx) == None:
         return None
@@ -17,9 +17,9 @@ def get_point_from_geo_responce(geo_responce):
     }
 
 def _validate_coords(lat, lng):
-    if not current_app.map_client.validate_coordinates((lat, lng)):
+    if not current_app.geo_client.validate_coordinates((lat, lng)):
         return jsonify(valid=False, name=lat + ", " + lng, message="Coordinates out of bounds")
-    geo_results = current_app.map_client.reverse_geocode((lat, lng))
+    geo_results = current_app.geo_client.reverse_geocode((lat, lng))
     point_info = get_point_from_geo_responce(geo_results)
     if point_info == None:
         return jsonify(valid=False, name=lat + ", " + lng, message="Coordinates out of bounds")
@@ -32,7 +32,7 @@ def _validate_coords(lat, lng):
     )   
 
 def _validate_address(address):
-    geo_results = current_app.map_client.geocode(address)
+    geo_results = current_app.geo_client.geocode(address)
     point_info = get_point_from_geo_responce(geo_results)
     if point_info == None:
         return jsonify(valid=False, name=address, message="Place unknown or out of bounds")
