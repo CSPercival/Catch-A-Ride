@@ -7,3 +7,5 @@ obj*/
 *transit_engine
 .vscode/
 tmp*
+test*
+venv*

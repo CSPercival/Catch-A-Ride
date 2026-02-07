@@ -1,10 +1,6 @@
-import os
 import subprocess
-from pathlib import Path
-import socket
 import time
 import requests
-import time
 
 
 # def wait_for_service(timeout=30):
@@ -56,7 +52,7 @@ import time
 
 
 
-class Map_Module_Starter:
+class Map_Module_Controller:
     def __init__(self, main_dir_absolute_path):
         self.main_dir = main_dir_absolute_path
         self.map_dir = main_dir_absolute_path + "/Components/Map_Service"
@@ -109,18 +105,19 @@ class Map_Module_Starter:
             time.sleep(1)
         return False
     
-    def prepare(self):
+    def get_status(self):
         pass
 
     def run(self, timeout):
         self._docker_up()
         available = self._wait_for_service(timeout)
         while not available:
-            print(f"ORS not responding after {timeout}s\n Restarting the procedure in 10sec")
-            timeout += 60
+            print(f"ORS not responding after {timeout}sec\n Restarting the procedure in 10sec")
             self._docker_down()
             time.sleep(10)
-            available = self._docker_up()
+            self._docker_up()
+            timeout += 60
+            available = self._wait_for_service(timeout)
         print("ORS is ready")
 
     def shutdown(self):
