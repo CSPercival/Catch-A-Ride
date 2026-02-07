@@ -1,7 +1,7 @@
 # Components
 
 This directory contains the main building blocks of the system.  
-Each component is responsible for a distinct part of the overall functionality
+Each component is responsible for a distinct part of the overall functionality.
 ## Components Overview
 
 ### Map Service

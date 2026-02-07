@@ -9,8 +9,8 @@ Its primary purpose is to present the results produced by the system in a clear 
 
 The application exposes a **single view**, which allows the user to:
 - provide input for a query
-- visualize the computed meeting point,
-- display travel routes for both participants,
+- visualize the computed meeting point
+- display travel routes for both participants
 
 The Visualizer is intended mainly as a **demonstration and debugging tool**, not as a full-featured end-user application.
 
@@ -21,9 +21,9 @@ The Visualizer is intended mainly as a **demonstration and debugging tool**, not
 All map-related rendering is implemented using the **Leaflet** JavaScript library.
 
 Leaflet is used to:
-- display the base map,
-- render routes and polylines,
-- mark start points, meeting points, and destinations.
+- display the base map
+- render routes and polylines
+- mark start points, meeting points, and destinations
 
 ---
 

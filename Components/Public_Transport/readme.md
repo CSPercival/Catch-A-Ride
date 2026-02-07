@@ -38,4 +38,4 @@ The service exposes its functionality through the `PTClient` class, which provid
   Returns a detailed description of the optimal route, including walking segments, intermediate stops, and transit line numbers.
 
 - `isochrones(U_id, M, m')`  
-  For each stop in `U_id` and its corresponding start time, returns the area that is reachable on foot up to time `m'`.
+  For each stop in `U_id` and its corresponding start time, returns the area that is reachable up to time `m'`.
