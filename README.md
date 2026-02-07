@@ -18,8 +18,7 @@ The application was developed as part of a bachelor’s thesis and is intended a
 
 To run the project locally, the following tools are required:
 
-- **Docker** (used for routing and isochrone services)
-- **Python 3.8+**
+- **Docker**
 - **Git LFS (Large File Storage)** — required because some data files are large and tracked using Git LFS
 
 Before cloning the repository, make sure Git LFS is installed and initialized:
@@ -66,3 +65,20 @@ http://127.0.0.1:5000
 - The first startup may take longer due to complex preprocessing process.
 - The system relies on static models of traffic and public transport schedules.
 - The web interface is intended mainly for visualization and demonstration purposes.
+
+--
+
+## Data Sources and Attribution
+
+This project makes use of the following open data and services:
+
+- **OpenStreetMap (OSM)**  
+  © OpenStreetMap contributors  
+  Data available under the Open Database License (ODbL):  
+  https://www.openstreetmap.org/copyright
+
+- **OpenRouteService (ORS)**  
+  Routing and geocoding services provided by Heidelberg Institute for Geoinformation Technology (HeiGIT)  
+  https://openrouteservice.org/
+
+The data and services are used in accordance with their respective licenses.
