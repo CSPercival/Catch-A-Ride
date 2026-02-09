@@ -34,6 +34,7 @@ class Travel_Data_Reader:
         }
         
     def get_travel_line(self, start_stop, start_time):
+        start_time = start_time % self.minutes_in_day
         num_stops = self.header['num_stops']
         initial_offset = ((start_stop - 1) * self.minutes_in_day  + start_time) * self.single_record_size * num_stops + self.header['travel_header_length']
         travel_record = [[0, 0, 0]]
@@ -44,6 +45,7 @@ class Travel_Data_Reader:
         return travel_record
 
     def read_single_travel_batch(self, start_stop, start_time, end_stop):
+        start_time = start_time % self.minutes_in_day
         num_stops = self.header['num_stops']
         initial_offset = (((start_stop - 1) * self.minutes_in_day  + start_time) * num_stops + end_stop - 1) * self.single_record_size + self.header['travel_header_length']
         move_cursor(self.file, initial_offset)

@@ -119,12 +119,12 @@ class TimelineOrders:
         finish_time = pt_segment['route'][-1]['arrival_time']
         single_timeline.add_event(title_string, desctiption_string, start_time, finish_time, color)
 
-    def add_car(self, key, ors_car_responce, segment_start_time, color = "green"):
+    def add_car(self, key, ors_car_responce, start_address, finish_address, segment_start_time, color = "green"):
         single_timeline = self.get_single_timeline(key)
         if single_timeline == None:
             print("ERROR, Timeline update - unknown key", key)
             return
-        title_string = "Car route to meeting place"
+        title_string = f"Car route: {start_address} -> {finish_address}"
         # title_string += ": " + pt_segment['route'][0]['name'] + " -> " + pt_segment['route'][-1]['name']
         desctiption_string = "Car description\n subdescription"
         start_time = segment_start_time

@@ -14,12 +14,15 @@ class PTClient:
         self.day_names = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: "Saturday", 6: "Sunday"}
         self.stop_path = "Components/Public_Transport/Resources/Preprocessed_Data/Common/Stops.json"
         self.trip_path = "Components/Public_Transport/Resources/Preprocessed_Data/" + self.day_names[day_id] + "/Trips.json"
+        self.isochrone_path = "Components/Public_Transport/Resources/Preprocessed_Data/Common/Walk_Isochrones.json"
         self.travel_path = "Components/Public_Transport/Resources/Preprocessed_Data/" + self.day_names[day_id] + "/Travel_Data.bin"
 
         with open(self.stop_path, 'r') as f:
             self.stop_data = json.load(f)        
         with open(self.trip_path, 'r') as f:
             self.trip_data = json.load(f)
+        with open(self.isochrone_path, 'r') as f:
+            self.isochrones_data = json.load(f)
         self.travel_data_reader = Travel_Data_Reader(self.travel_path)
         self.ors_walk_client = ors_walk_client
 
@@ -97,3 +100,15 @@ class PTClient:
                 if final_reach_times[i][0] > single_reach_times[end_ids[i]]:
                     final_reach_times[i] = [single_reach_times[end_ids[i]], id]
         return final_reach_times
+    
+    def isochrones(self, start_ids: List[int], start_times: List[int], final_time: int):
+        isochrones = []
+        for start_id, start_time in zip(start_ids, start_times):
+            if start_time > final_time:
+                # isochrones.append([(0,0)]) # empty area that won't have intersection with any other isochrone
+                continue
+            diff_time = min(final_time - start_time, 60)  
+            isochrone = self.isochrones_data[start_id][diff_time]
+            # isochrone = [stop for stop in isochrone if stop['arrival_time'] <= final_time - start_time]
+            isochrones.append(isochrone)
+        return isochrones

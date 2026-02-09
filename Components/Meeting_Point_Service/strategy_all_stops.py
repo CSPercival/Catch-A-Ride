@@ -40,4 +40,11 @@ class allStopsStrategy:
                 best_mp_id = i
                 lowest_pt_tt = pt_mp_reach_times[i]
         # coords of mp, eta, mp eta, car mp eta, pt mp eta
-        return [mp_coords[best_mp_id], best_reach_time, mp_reach_times[best_mp_id], car_mp_reach_times[best_mp_id], pt_mp_reach_times[best_mp_id]]
+        # return [mp_coords[best_mp_id], best_reach_time, mp_reach_times[best_mp_id], car_mp_reach_times[best_mp_id], pt_mp_reach_times[best_mp_id]]
+        # mp coords, eta, variant, mp name
+        if best_mp_id == 0:
+            return [mp_coords[best_mp_id], best_reach_time, 2, None]
+        elif best_mp_id == 1:
+            return [mp_coords[best_mp_id], best_reach_time, 1, None]
+        else:
+            return [mp_coords[best_mp_id], best_reach_time, 0, self.MPS.stop_data['stops'][best_mp_id - 1]['name']]

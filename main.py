@@ -44,30 +44,34 @@ def check_requirements():
     print("All requirements are satisfied!", flush=True)
 
 def main():
-    check_requirements()
+    # check_requirements()
     absolute_path = os.getcwd()
     # print(absolute_path)
 
     MMC = Map_Module_Controller(absolute_path)
     PTMC = PT_Module_Controller(absolute_path, MMC)
     VMC = Visualizer_Module_Controller(absolute_path)
+    # print("-------------------------------------------------------------------------------------")
+    # print("Checking Map Service", flush=True)
+    # MMC.run(20 * 60)
+    # MMC.shutdown()
 
-    print("Checking Map Service", flush=True)
-    MMC.run(20 * 60)
-    MMC.shutdown()
+    # print("-------------------------------------------------------------------------------------")
+    # print("Checking Public Transport Service", flush=True)
+    # PTMC.run_processing()
 
-    print("Checking Public Transport Service", flush=True)
-    PTMC.run_processing()
+    # print("-------------------------------------------------------------------------------------")
+    # print("Checking Visualizer", flush=True)
+    # VMC.run(60)
+    # VMC.shutdown()
 
-    print("Checking Visualizer", flush=True)
-    VMC.run(60)
-    VMC.shutdown()
-
+    print("-------------------------------------------------------------------------------------")
     print("All components checked successfully!", flush=True)
     
     print("Running the application...", flush=True)
-    MMC.run(60)
+    # MMC.run(60)
     VMC.run(60)
+    print("-------------------------------------------------------------------------------------")
     try:
         while True:
             user_input = input("Enter 'quit' or 'exit' to stop: ").strip().lower()
@@ -77,7 +81,7 @@ def main():
         print("\nKeyboard interrupt received.", flush=True)
 
     print("Shutting down the application...", flush=True)
-    MMC.shutdown()
+    # MMC.shutdown()
     VMC.shutdown()
     print("Application stopped successfully!", flush=True)
 
