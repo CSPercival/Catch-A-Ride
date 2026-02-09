@@ -7,6 +7,7 @@ export class TimelineController {
     
     handleOrders(orders){
         this.state.updateMainHeader(orders['header']['meetingPointName'], orders['header']['journeyDuration']);
+        this.view.updateMainHeader(orders['header']['meetingPointName'], orders['header']['journeyFinishTime'])
         const keys = ['car','pt','duo'];
         keys.forEach(key => {
             orders[key].events.forEach(event => {
@@ -20,6 +21,7 @@ export class TimelineController {
     }
 
     clearTimelines(){
+        console.log("Clear timelines")
         this.state.clearState();
         this.view.clearView();
     }

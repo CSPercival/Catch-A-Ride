@@ -28,6 +28,7 @@ export class FormView {
                 feedback : document.getElementById("pt-start-time-feedback")
             }
         }
+        this.strategyButton = document.getElementById("strategy-button")
         this.submitButton = document.getElementById("form-submit-button")
     }
 
@@ -43,6 +44,10 @@ export class FormView {
         } else {
             console.log("udpateAddress FORM VIEW ERROR: unknown key: ", key);
         }
+    }
+
+    flipStrategy(){
+        this.strategyButton.textContent = this.strategyButton.textContent === "FAST" ? "SLOW" : "FAST";
     }
 
     setAsWaiting(key){
@@ -68,6 +73,10 @@ export class FormView {
                 this.times[key].input.addEventListener("change", handler);
             }
         }
+    }
+
+    bindStrategyChangeEvent(handler){
+        this.strategyButton.addEventListener("click", handler);
     }
 
     bindSubmitEvent(handler){

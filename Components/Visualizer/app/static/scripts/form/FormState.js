@@ -48,6 +48,7 @@ export class FormState {
                 valid: false
             }
         }
+        this.strategy = 0;
     }
 
     setAddressPresence(presentAddressKeys){
@@ -99,10 +100,15 @@ export class FormState {
         }
     }
 
+    flipStrategy(){
+        this.strategy = this.strategy ? 0 : 1 
+    }
+
     getState(){
         return {
             addresses : this.addresses,
-            times : this.times
+            times : this.times,
+            strategy : this.strategy
         }
     }
 

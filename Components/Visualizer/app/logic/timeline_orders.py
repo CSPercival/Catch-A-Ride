@@ -1,5 +1,11 @@
 from Components.Map_Service.mapors_getters import single_duration
 
+def time_to_str(time):
+    time = time % (24 * 60)
+    hours = time // 60
+    minutes = time % 60
+    return f"{hours:02d}:{minutes:02d}"
+
 class SingleTimeLineOrders:
     def __init__(self, name):
         self.header = {
@@ -63,12 +69,12 @@ class TimelineOrders:
     def get_orders(self):
         timeline_orders = {}
         timeline_orders['header'] = self.header
-        if len(self.single_car.events) > 0:
-            timeline_orders['car'] = self.single_car.get_orders()
-        if len(self.single_pt.events) > 0:
-            timeline_orders['pt'] = self.single_pt.get_orders()
-        if len(self.duo.events) > 0:
-            timeline_orders['duo'] = self.duo.get_orders()
+        # if len(self.single_car.events) > 0:
+        timeline_orders['car'] = self.single_car.get_orders()
+        # if len(self.single_pt.events) > 0:
+        timeline_orders['pt'] = self.single_pt.get_orders()
+        # if len(self.duo.events) > 0:
+        timeline_orders['duo'] = self.duo.get_orders()
         return timeline_orders
 
     def set_main_header(self, meeting_point_name, start_time, finish_time):
@@ -99,25 +105,32 @@ class TimelineOrders:
         if single_timeline == None:
             print("ERROR, Timeline update - unknown key", key)
             return
-        title_string = pt_segment['type'] + " " + pt_segment['line_name']
+        title_string = pt_segment['type'].upper() + " " + pt_segment['line_name']
         title_string += ", " + pt_segment['route'][0]['name'] + " -> " + pt_segment['route'][-1]['name']
-        desctiption_string = "Trip description\n subdescription"
+
+        desctiption = []
+        for step in pt_segment['route']:
+            desctiption.append(time_to_str(step['arrival_time']) + " - " + step['name'])
+
         start_time = pt_segment['route'][0]['arrival_time']
         finish_time = pt_segment['route'][-1]['arrival_time']
-        single_timeline.add_event(title_string, desctiption_string, start_time, finish_time, color)  
+        single_timeline.add_event(title_string, desctiption, start_time, finish_time, color)  
 
 
-    def add_pt_walk(self, key, pt_segment, color = "blue"):
+    def add_pt_walk(self, key, pt_segment, walk_path, color = "blue"):
         single_timeline = self.get_single_timeline(key)
         if single_timeline == None:
             print("ERROR, Timeline update - unknown key", key)
             return
         title_string = "Walk"
         title_string += ": " + pt_segment['route'][0]['name'] + " -> " + pt_segment['route'][-1]['name']
-        desctiption_string = "Walk description\n subdescription"
+        desctiption = []
+        for step in walk_path['routes'][0]['segments'][0]['steps']:
+            desctiption.append(step['instruction'])
+
         start_time = pt_segment['route'][0]['arrival_time']
         finish_time = pt_segment['route'][-1]['arrival_time']
-        single_timeline.add_event(title_string, desctiption_string, start_time, finish_time, color)
+        single_timeline.add_event(title_string, desctiption, start_time, finish_time, color)
 
     def add_car(self, key, ors_car_responce, start_address, finish_address, segment_start_time, color = "green"):
         single_timeline = self.get_single_timeline(key)
@@ -125,9 +138,10 @@ class TimelineOrders:
             print("ERROR, Timeline update - unknown key", key)
             return
         title_string = f"Car route: {start_address} -> {finish_address}"
-        # title_string += ": " + pt_segment['route'][0]['name'] + " -> " + pt_segment['route'][-1]['name']
-        desctiption_string = "Car description\n subdescription"
+        desctiption = []
+        for step in ors_car_responce['routes'][0]['segments'][0]['steps']:
+            desctiption.append(step['instruction'])
         start_time = segment_start_time
         finish_time = segment_start_time + round(single_duration(ors_car_responce) / 60)
-        single_timeline.add_event(title_string, desctiption_string, start_time, finish_time, color)
+        single_timeline.add_event(title_string, desctiption, start_time, finish_time, color)
         

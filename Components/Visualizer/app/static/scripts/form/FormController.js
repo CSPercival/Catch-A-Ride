@@ -29,6 +29,8 @@ export class FormController {
             this.handleFormAddressChange(addressTargetToKey(e.detail.target), e.detail.target.value));
         formEventBus.addEventListener('FormTimeChange', e => 
             this.handleFormTimeChange(timeTargetToKey(e.detail.target), e.detail.target.value));
+        formEventBus.addEventListener('FormStrategyChange', e => 
+            this.handleFormStrategyChange(e));
         formEventBus.addEventListener('FormSubmit', e => this.handleFormSubmit(e));
     }
 
@@ -65,11 +67,16 @@ export class FormController {
                                                 }));
     };
 
+    handleFormStrategyChange(event){
+        this.state.flipStrategy();
+        this.view.flipStrategy();
+    };
+
     handleFormSubmit(event){
         console.log('Form Submitted:', event.detail);
         event.preventDefault();
         this.mainEventBus.dispatchEvent(new CustomEvent('FormSubmit', { detail: this.state.getState() }));
-        alert("Form submitted successfully! XD");
+        alert("Form submitted successfully!");
     };
 
     updateInvalidAddress(new_place){

@@ -51,6 +51,9 @@ export class MainController{
     }
 
     handleFormSubmit(event){
+        this.timeline.clearTimelines();
+        this.map.clearPolylines();
+        this.map.clearCrucialMarker("meetingMarker");
         fetch(window.APP_CONFIG.submitFormUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },

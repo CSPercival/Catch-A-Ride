@@ -6,6 +6,7 @@ export class FormEvents {
         this.view.bindAddressChangeEvent((event) => this.emitAddressChange(event));
         this.view.bindTimeChangeEvent((event) => this.emitTimeChange(event));
         this.view.bindSubmitEvent((event) => this.emitSubmit(event));
+        this.view.bindStrategyChangeEvent((event) => this.emitStrategyChange(event));
     }
 
     emitAddressChange(event){
@@ -17,5 +18,8 @@ export class FormEvents {
     emitSubmit(event){
         event.preventDefault();
         this.formEventBus.dispatchEvent(new CustomEvent('FormSubmit', { detail: event }));
+    }
+    emitStrategyChange(event){
+        this.formEventBus.dispatchEvent(new CustomEvent('FormStrategyChange', { detail: event }));
     }
 }
